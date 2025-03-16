@@ -1,0 +1,10 @@
+.searchFormContainer {
+  display: flex;
+  gap: 10px;
+  width: 35%;
+
+  .searchButton {
+    background-color: lightcoral;
+    padding: 10px 25px;
+  }
+}

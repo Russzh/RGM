@@ -1,0 +1,10 @@
+.genreSelectContainer {
+  display: flex;
+  gap: 15px;
+  width: 400px;
+  background-color: lightgrey;
+
+  .genreButton {
+    padding: 10px 0;
+  }
+}
