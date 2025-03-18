@@ -4,3 +4,7 @@ export interface IButtonProps {
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
 }
+
+export enum ButtonTexts {
+  "Search" = "Search",
+}

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 
 import styles from "./SearchForm.module.scss";
 import { Button, Input } from "../../shared/components";
-import { ButtonTexts, InputPlaceholders } from "../../shared/constants";
 import { ISearchFormProps } from "./SearchForm.types";
+import { InputPlaceholders } from "../../shared/components/Input/Input.types";
+import { ButtonTexts } from "../../shared/components/Button/Button.types";
 
 const { searchFormContainer, searchButton } = styles;
 
@@ -13,8 +14,13 @@ const SearchForm: React.FC<ISearchFormProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
 
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    onSearchClick(searchQuery);
+  };
+
   return (
-    <form className={searchFormContainer}>
+    <form className={searchFormContainer} onSubmit={handleFormSubmit}>
       <Input
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setSearchQuery(e.target.value)
@@ -28,7 +34,6 @@ const SearchForm: React.FC<ISearchFormProps> = ({
         buttonText={ButtonTexts.Search}
         type="submit"
         className={searchButton}
-        onClick={() => onSearchClick(searchQuery)}
       />
     </form>
   );

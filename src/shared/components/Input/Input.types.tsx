@@ -6,3 +6,8 @@ export interface IInputProps {
   inputPlaceholder: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
+
+export enum InputPlaceholders {
+  Default = "Please enter a search query",
+  WhatDoYouWantToWatch = "What do you want to watch?",
+}

@@ -17,10 +17,7 @@ function App() {
   return (
     <div className="app" id="main-page">
       <Counter initialValue={10}></Counter>
-      <SearchForm
-        initialSearchQuery={"Your favorite movie name"}
-        onSearchClick={handleSearchClick}
-      />
+      <SearchForm initialSearchQuery="" onSearchClick={handleSearchClick} />
       <GenreSelect onGenreSelect={handleGenreClick} />
     </div>
   );

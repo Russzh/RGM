@@ -1,8 +1,7 @@
 import React from "react";
 
 import globalStyles from "../../../index.module.scss";
-import { IInputProps } from "./Input.types";
-import { InputPlaceholders } from "../../constants";
+import { IInputProps, InputPlaceholders } from "./Input.types";
 
 const { invalidClass } = globalStyles;
 

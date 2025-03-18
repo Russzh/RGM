@@ -1,14 +1,5 @@
 import { IGenreItem } from "../components/GenreSelect/GenreSelect.types";
 
-export enum ButtonTexts {
-  "Search" = "Search",
-}
-
-export enum InputPlaceholders {
-  Default = "Please enter a search query",
-  WhatDoYouWantToWatch = "What do you want to watch?",
-}
-
 export const genresList: IGenreItem[] = [
   {
     id: "27cc3006-e93a-4748-8ca8-73d06aa93b6d",
