@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { GenreSelect } from "./GenreSelect";
 import { genresList } from "../../shared/constants";
@@ -13,13 +14,13 @@ describe("GenreSelect", () => {
     });
   });
 
-  it("calls onGenreSelect with the correct genre name when a button is clicked", () => {
+  it("calls onGenreSelect with the correct genre name when a button is clicked", async () => {
     const mockOnGenreSelect = jest.fn();
     render(<GenreSelect onGenreSelect={mockOnGenreSelect} />);
 
     const firstGenreButton = screen.getByText(genresList[0].name.toUpperCase());
 
-    fireEvent.click(firstGenreButton);
+    await userEvent.click(firstGenreButton);
 
     expect(mockOnGenreSelect).toHaveBeenCalledTimes(1);
     expect(mockOnGenreSelect).toHaveBeenCalledWith(genresList[0].name);

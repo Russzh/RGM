@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { SearchForm } from "./SearchForm";
 import { InputPlaceholders } from "../../shared/components/Input/Input.types";
@@ -20,18 +21,18 @@ describe("SearchForm", () => {
     expect(input.value).toBe("Initial Query");
   });
 
-  it("updates search query on input change", () => {
+  it("updates search query on input change", async () => {
     render(<SearchForm initialSearchQuery="" onSearchClick={jest.fn()} />);
     const input = screen.getByPlaceholderText(
       InputPlaceholders.WhatDoYouWantToWatch,
     ) as HTMLInputElement;
 
-    fireEvent.change(input, { target: { value: "New Query" } });
+    await userEvent.type(input, "New Query");
 
     expect(input.value).toBe("New Query");
   });
 
-  it("calls onSearchClick with the correct query when form is submitted", () => {
+  it("calls onSearchClick with the correct query when form is submitted", async () => {
     const mockOnSearchClick = jest.fn();
     render(
       <SearchForm
@@ -41,7 +42,7 @@ describe("SearchForm", () => {
     );
     const button = screen.getByText(ButtonTexts.Search.toUpperCase());
 
-    fireEvent.click(button);
+    await userEvent.click(button);
 
     expect(mockOnSearchClick).toHaveBeenCalledTimes(1);
     expect(mockOnSearchClick).toHaveBeenCalledWith("Initial Query");
