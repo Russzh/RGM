@@ -20,10 +20,13 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["cypress", "@cypress/react", "jest", "node", "@testing-library/jest-dom"]
   },
   "include": [
     "src",
-    "src/declaration.d.ts"
+    "src/declaration.d.ts",
+    "cypress/**/*.ts",
+    "cypress"
   ]
 }
