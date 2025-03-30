@@ -11,7 +11,7 @@ const {
   movieImage,
   movieNameWrapper,
   movieName,
-  contextMenu,
+  releaseYear,
   contextMenuButton,
   contextMenuPopupButton,
   contextMenuPopup,
@@ -46,7 +46,7 @@ const MovieCard: React.FC<IMovieTileProps> = ({ movie }) => {
       <img src={movie.imageUrl} alt={movie.name} className={movieImage} />
       <div className={movieNameWrapper}>
         <h5 className={movieName}>{movie.name}</h5>
-        <span>{movie.releaseYear}</span>
+        <span className={releaseYear}>{movie.releaseYear}</span>
       </div>
       <span>{movie.genres.join(", ")}</span>
 
