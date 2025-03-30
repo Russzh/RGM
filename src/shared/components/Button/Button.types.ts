@@ -7,4 +7,7 @@ export interface IButtonProps {
 
 export enum ButtonTexts {
   "Search" = "Search",
+  "ContextMenu" = "...",
+  "Edit" = "Edit",
+  "Delete" = "Delete",
 }

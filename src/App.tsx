@@ -1,18 +1,32 @@
 import React, { useState } from "react";
-import "./App.css";
 
+import "./App.css";
 import Counter from "./components/Counter/Counter";
 import { SearchForm } from "./components/SearchForm/SearchForm";
 import { GenreSelect } from "./components/GenreSelect/GenreSelect";
+import { MovieList } from "./components/MovieList/MovieList";
+import { MovieDetails } from "./components/MovieDetails/MovieDetails";
+import { MovieProvider } from "./context/MovieContext";
+import { SortControl } from "./components/SortControl/SortControl";
+import { SortByOptions } from "./components/SortControl/SortControl.types";
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<string>();
+  const [sortByValue, setSortByValue] = useState<string>(
+    Object.keys(SortByOptions)[0],
+  );
+
+  const handleSortChange = (newValue: string): void => {
+    console.log("Selected sort option:", newValue);
+    setSortByValue(newValue);
+  };
+
   const handleGenreClick = (genre: string): void => {
     console.log(`Selected genre: ${genre}`);
     setSelectedGenre(genre);
   };
 
-  const handleSearchClick = (query: string) => {
+  const handleSearchClick = (query: string): void => {
     console.log("Search triggered with query:", query);
   };
 
@@ -21,6 +35,17 @@ function App() {
       <Counter initialValue={10}></Counter>
       <SearchForm initialSearchQuery="" onSearchClick={handleSearchClick} />
       <GenreSelect onGenreSelect={handleGenreClick} />
+
+      <MovieProvider>
+        <MovieList />
+        <MovieDetails />
+      </MovieProvider>
+
+      <SortControl
+        currentSelection={sortByValue}
+        onSelectionChange={handleSortChange}
+      />
+
       {selectedGenre && (
         <div id="for-cypress">Selected genre: {selectedGenre}</div>
       )}
