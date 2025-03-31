@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { GenreSelect } from "../components/GenreSelect/GenreSelect";
+import { GenreSelect } from "@components/GenreSelect/GenreSelect";
 
 const meta: Meta<typeof GenreSelect> = {
   title: "Components/GenreSelect",

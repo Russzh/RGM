@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useState } from "react";
 
-import { IMovieInfo } from "../components/MovieList/MovieCard/MovieCard.types";
+import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
 
 export interface IMovieContextType {
   selectedMovie: IMovieInfo | null;

@@ -1,7 +1,7 @@
 import React from "react";
 
 import styles from "./MovieDetails.module.scss";
-import { MovieContext } from "../../context/MovieContext";
+import { MovieContext } from "@context/MovieContext";
 
 const {
   movieDetailsWrapper,

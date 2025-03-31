@@ -1,7 +1,7 @@
 import React from "react";
 
 import styles from "./MovieList.module.scss";
-import { moviesList } from "../../shared/constants";
+import { moviesList } from "@shared/constants";
 import { MovieCard } from "./MovieCard/MovieCard";
 import { IMovieInfo } from "./MovieCard/MovieCard.types";
 

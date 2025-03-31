@@ -2,9 +2,8 @@ import React, { useContext } from "react";
 
 import styles from "./MovieCard.module.scss";
 import { IMovieTileProps } from "./MovieCard.types";
-import { Button } from "../../../shared/components";
-import { ButtonTexts } from "../../../shared/components/Button/Button.types";
-import { MovieContext } from "../../../context/MovieContext";
+import { Button, ButtonTexts } from "@shared/components";
+import { MovieContext } from "@context/MovieContext";
 
 const {
   movieTile,

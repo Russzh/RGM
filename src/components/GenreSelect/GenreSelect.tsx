@@ -1,8 +1,8 @@
 import React from "react";
 
 import styles from "./GenreSelect.module.scss";
-import { Button } from "../../shared/components";
-import { genresList } from "../../shared/constants";
+import { Button } from "@shared/components";
+import { genresList } from "@shared/constants";
 import { IGenreItem, IGenreSelectProps } from "./GenreSelect.types";
 
 const { genreSelectContainer, genreButton } = styles;

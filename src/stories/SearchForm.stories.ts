@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { SearchForm } from "../components/SearchForm/SearchForm";
+import { SearchForm } from "@components/SearchForm/SearchForm";
 
 const meta: Meta<typeof SearchForm> = {
   title: "Components/SearchForm",

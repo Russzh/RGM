@@ -1,5 +1,5 @@
-import { IGenreItem } from "../components/GenreSelect/GenreSelect.types";
-import { IMovieInfo } from "../components/MovieList/MovieCard/MovieCard.types";
+import { IGenreItem } from "@components/GenreSelect/GenreSelect.types";
+import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
 
 export const genresList: IGenreItem[] = [
   {

@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { GenreSelect } from "./GenreSelect";
-import { genresList } from "../../shared/constants";
+import { genresList } from "@shared/constants";
 
 describe("GenreSelect", () => {
   it("renders all genres as buttons", () => {

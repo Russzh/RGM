@@ -13,9 +13,9 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "cross-env CI=true react-scripts test --coverage",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "cross-env CI=true craco test --coverage",
     "jest": "jest",
     "eject": "react-scripts eject",
     "storybook": "storybook dev -p 6006",
@@ -46,6 +46,7 @@
     "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.27.0",
     "@chromatic-com/storybook": "^3.2.6",
+    "@craco/craco": "^7.1.0",
     "@cypress/react": "^9.0.0",
     "@cypress/vite-dev-server": "^6.0.2",
     "@cypress/webpack-dev-server": "^4.0.1",
@@ -68,6 +69,7 @@
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "babel-jest": "^29.7.0",
+    "craco-alias": "^3.0.1",
     "cross-env": "^7.0.3",
     "cypress": "^14.2.0",
     "eslint-plugin-storybook": "^0.12.0",

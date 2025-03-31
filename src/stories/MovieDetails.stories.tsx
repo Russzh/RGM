@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { MovieDetails } from "../components/MovieDetails/MovieDetails";
-import { MovieContext } from "../context/MovieContext";
-import { IMovieInfo } from "../components/MovieList/MovieCard/MovieCard.types";
-import { moviesList } from "../shared/constants";
+import { MovieDetails } from "@components/MovieDetails/MovieDetails";
+import { MovieContext } from "@context/MovieContext";
+import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
+import { moviesList } from "@shared/constants";
 
 const meta: Meta<typeof MovieDetails> = {
   title: "Components/MovieDetails",

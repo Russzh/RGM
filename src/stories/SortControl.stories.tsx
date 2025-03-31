@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { SortControl } from "../components/SortControl/SortControl";
-import { SortByOptions } from "../components/SortControl/SortControl.types";
+import { SortControl } from "@components/SortControl/SortControl";
+import { SortByOptions } from "@components/SortControl/SortControl.types";
 
 const meta: Meta<typeof SortControl> = {
   title: "Components/SortControl",

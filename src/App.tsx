@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 
 import "./App.css";
-import Counter from "./components/Counter/Counter";
-import { SearchForm } from "./components/SearchForm/SearchForm";
-import { GenreSelect } from "./components/GenreSelect/GenreSelect";
-import { MovieList } from "./components/MovieList/MovieList";
-import { MovieDetails } from "./components/MovieDetails/MovieDetails";
-import { MovieProvider } from "./context/MovieContext";
-import { SortControl } from "./components/SortControl/SortControl";
-import { SortByOptions } from "./components/SortControl/SortControl.types";
+import Counter from "@components/Counter/Counter";
+import {
+  SearchForm,
+  GenreSelect,
+  MovieList,
+  MovieDetails,
+  SortControl,
+} from "@components/index";
+import { MovieProvider } from "@context/MovieContext";
+import { SortByOptions } from "@components/SortControl/SortControl.types";
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<string>();
