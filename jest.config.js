@@ -7,6 +7,7 @@ module.exports = {
     "!src/**/*.d.ts",
     "!src/index.tsx",
     "!src/reportWebVitals.ts",
+    "!src/stories/*.{ts,tsx}",
   ],
   coverageReporters: ["text", "lcov", "json", "html"],
   transform: {

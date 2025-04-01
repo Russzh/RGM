@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import styles from "./MovieDetails.module.scss";
 import { MovieContext } from "@context/MovieContext";
@@ -12,7 +12,7 @@ const {
 } = styles;
 
 const MovieDetails: React.FC = () => {
-  const { selectedMovie } = React.useContext(MovieContext);
+  const { selectedMovie } = useContext(MovieContext);
 
   if (!selectedMovie) {
     return null;

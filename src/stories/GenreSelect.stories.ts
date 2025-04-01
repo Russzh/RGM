@@ -9,6 +9,7 @@ const meta: Meta<typeof GenreSelect> = {
   argTypes: {
     onGenreSelect: {
       description: "Callback function for genre selection",
+      action: "New genre selected",
     },
   },
 };
@@ -17,9 +18,5 @@ export default meta;
 type Story = StoryObj<typeof GenreSelect>;
 
 export const GenreSelectComponent: Story = {
-  args: {
-    onGenreSelect: () => {
-      console.log("Genre selected");
-    },
-  },
+  args: {},
 };
