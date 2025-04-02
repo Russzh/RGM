@@ -1,0 +1,11 @@
+.sortControlWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .sortControlSelect {
+    padding: 7px 5px 5px;
+    border: none;
+    font-size: 14px;
+  }
+}

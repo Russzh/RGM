@@ -1,0 +1,29 @@
+.movieDetailsWrapper {
+  display: flex;
+  gap: 30px;
+
+  .movieDescriptionWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+
+    .movieNameWrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .movieRating {
+        border: 1px solid black;
+        border-radius: 15px;
+        padding: 5px 6px;
+      }
+    }
+
+    .movieReleaseWrapper {
+      display: flex;
+      gap: 30px;
+      margin: 15px 0;
+      color: red;
+    }
+  }
+}

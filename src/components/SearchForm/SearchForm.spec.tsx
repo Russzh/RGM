@@ -3,8 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { SearchForm } from "./SearchForm";
-import { InputPlaceholders } from "../../shared/components/Input/Input.types";
-import { ButtonTexts } from "../../shared/components/Button/Button.types";
+import { ButtonTexts, InputPlaceholders } from "@shared/components";
 
 describe("SearchForm", () => {
   it("renders with initial search query", () => {

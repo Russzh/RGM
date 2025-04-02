@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 
 import styles from "./SearchForm.module.scss";
-import { Button, Input } from "../../shared/components";
+import {
+  Button,
+  Input,
+  InputPlaceholders,
+  ButtonTexts,
+} from "@shared/components";
 import { ISearchFormProps } from "./SearchForm.types";
-import { InputPlaceholders } from "../../shared/components/Input/Input.types";
-import { ButtonTexts } from "../../shared/components/Button/Button.types";
 
 const { searchFormContainer, searchButton } = styles;
 

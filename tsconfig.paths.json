@@ -1,0 +1,11 @@
+{
+  "compilerOptions":{
+    "paths":{
+      "@components/*": ["components/*"],
+      "@context/*": ["context/*"],
+      "@shared/*":[
+        "shared/*"
+      ]
+    }
+  }
+}

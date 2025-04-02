@@ -1,0 +1,57 @@
+.movieTile {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  cursor: pointer;
+  width: 200px;
+  position: relative;
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
+
+  .movieImage {
+    margin-bottom: 10px;
+  }
+
+  .movieNameWrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+
+    .releaseYear {
+      padding: 2px 10px;
+      border: 1px solid gray;
+      border-radius: 5px;
+    }
+  }
+}
+
+.contextMenuButton {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background-color: black;
+  border-radius: 15px;
+  transform: rotate(90deg);
+  font-size: 18px;
+  padding-bottom: 8px;
+}
+
+.contextMenuPopup {
+  position: absolute;
+  top: 50px;
+  right: 15px;
+  background: black;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  .contextMenuPopupButton {
+    width: 100%;
+    padding: 5px 10px;
+
+    &:hover {
+      background-color: lightcoral;
+    }
+  }
+}
