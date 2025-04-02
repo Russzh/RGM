@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 interface CounterProps {
-  initialValue: number;
+  initialValue: number | undefined;
 }
 
 interface CounterState {

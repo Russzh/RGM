@@ -19,7 +19,7 @@ const MovieDetails: React.FC = () => {
   }
 
   return (
-    <div className={movieDetailsWrapper}>
+    <div className={movieDetailsWrapper} data-testid="movie-details-wrapper">
       <img src={selectedMovie.imageUrl} alt={selectedMovie.name} />
       <div className={movieDescriptionWrapper}>
         <div className={movieNameWrapper}>

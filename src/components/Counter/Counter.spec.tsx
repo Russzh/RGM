@@ -11,6 +11,13 @@ describe("Counter", () => {
     expect(screen.getByText("Count: 5")).toBeInTheDocument();
   });
 
+  it("should initialize count with 0 when initialValue is not provided", () => {
+    render(<Counter initialValue={undefined} />);
+
+    const countElement = screen.getByText("Count: 0");
+    expect(countElement).toBeInTheDocument();
+  });
+
   it("should increment the count", async () => {
     render(<Counter initialValue={5} />);
 

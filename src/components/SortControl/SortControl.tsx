@@ -10,7 +10,7 @@ const SortControl: React.FC<ISortControlProps> = ({
   onSelectionChange,
 }) => {
   return (
-    <div className={sortControlWrapper}>
+    <div className={sortControlWrapper} data-testid="sort-control-wrapper">
       <label htmlFor="sort-control-select">SORT BY:</label>
       <select
         id="sort-control-select"
