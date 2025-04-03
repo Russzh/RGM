@@ -6,7 +6,7 @@ import { Button, ButtonTexts } from "@shared/components";
 import { MovieContext } from "@context/MovieContext";
 
 const {
-  movieTile,
+  movieCardWrapper,
   movieImage,
   movieNameWrapper,
   movieName,
@@ -37,10 +37,11 @@ const MovieCard: React.FC<IMovieTileProps> = ({ movie }) => {
 
   return (
     <div
-      className={movieTile}
+      className={movieCardWrapper}
       onClick={() => setSelectedMovie(movie)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      data-testid="movie-card-wrapper"
     >
       <img src={movie.imageUrl} alt={movie.name} className={movieImage} />
       <div className={movieNameWrapper}>

@@ -4,8 +4,9 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.{js,jsx,ts,tsx}",
+    "!src/**/*.types.ts",
     "!src/**/*.d.ts",
-    "!src/index.tsx",
+    "!src/**/index.{js,jsx,ts,tsx}",
     "!src/reportWebVitals.ts",
     "!src/stories/*.{ts,tsx}",
   ],

@@ -9,7 +9,7 @@ const { movieListWrapper } = styles;
 
 const MovieList: React.FC = () => {
   return (
-    <div className={movieListWrapper}>
+    <div className={movieListWrapper} data-testid="movie-list-wrapper">
       {moviesList.map((movie: IMovieInfo) => (
         <MovieCard key={movie.id} movie={movie} />
       ))}
