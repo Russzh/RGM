@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 
 import { MovieCard } from "@components/MovieList/MovieCard/MovieCard";
 import { moviesList } from "@shared/constants";
-import { MovieContext } from "@context/MovieContext";
+import { IMovieContextType, MovieContext } from "@context/MovieContext";
 import { ButtonTexts } from "@shared/components";
 
 describe("MovieCard", () => {
@@ -25,7 +25,11 @@ describe("MovieCard", () => {
 
     render(
       <MovieContext.Provider
-        value={{ setSelectedMovie: mockSetSelectedMovie } as any}
+        value={
+          {
+            setSelectedMovie: mockSetSelectedMovie,
+          } as unknown as IMovieContextType
+        }
       >
         <MovieCard movie={moviesList[0]} />
       </MovieContext.Provider>,
@@ -47,7 +51,7 @@ describe("MovieCard", () => {
 
     await userEvent.click(contextMenuButton);
     const contextMenuPopupButtons = screen.queryAllByText((content, element) =>
-      (element as any).classList.contains("contextMenuPopupButton"),
+      (element as HTMLElement).classList.contains("contextMenuPopupButton"),
     );
     expect(contextMenuPopupButtons).toHaveLength(2);
 
