@@ -5,3 +5,4 @@ export * from "./MovieDetails/MovieDetails";
 export * from "./MovieList/MovieList";
 export * from "./SearchForm/SearchForm";
 export * from "./SortControl/SortControl";
+export * from "./AddEditMovieDialog/AddEditMovieDialog";

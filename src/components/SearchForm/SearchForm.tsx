@@ -28,7 +28,7 @@ const SearchForm: React.FC<ISearchFormProps> = ({
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setSearchQuery(e.target.value)
         }
-        inputValue={searchQuery}
+        currentValue={searchQuery}
         inputId="search-form"
         invalid={false}
         inputPlaceholder={InputPlaceholders.WhatDoYouWantToWatch}

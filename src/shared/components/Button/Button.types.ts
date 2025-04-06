@@ -1,8 +1,10 @@
+import React from "react";
+
 export interface IButtonProps {
   buttonText: string;
   className?: string;
   type?: "button" | "submit" | "reset";
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent) => void;
 }
 
 export enum ButtonTexts {
@@ -10,4 +12,5 @@ export enum ButtonTexts {
   "ContextMenu" = "...",
   "Edit" = "Edit",
   "Delete" = "Delete",
+  "AddMovie" = "+ Add Movie",
 }

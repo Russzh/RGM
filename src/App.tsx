@@ -1,22 +1,28 @@
 import React, { useState } from "react";
 
-import "./App.css";
-import Counter from "@components/Counter/Counter";
+import "./App.module.scss";
 import {
   SearchForm,
   GenreSelect,
   MovieList,
   MovieDetails,
   SortControl,
-} from "@components/index";
+  AddEditMovieDialog,
+} from "./components";
 import { MovieProvider } from "@context/MovieContext";
 import { SortByOptions } from "@components/SortControl/SortControl.types";
+import { Button, ButtonTexts } from "@shared/components";
+import styles from "./App.module.scss";
+
+const { app, addMovieButton } = styles;
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<string>();
   const [sortByValue, setSortByValue] = useState<string>(
     Object.keys(SortByOptions)[0],
   );
+  const [isAddMovieModalOpened, setIsAddMovieModalOpened] =
+    useState<boolean>(false);
 
   const handleSortChange = (newValue: string): void => {
     console.log("Selected sort option:", newValue);
@@ -33,8 +39,7 @@ function App() {
   };
 
   return (
-    <div className="app" id="main-page">
-      <Counter initialValue={10}></Counter>
+    <div className={app} id="main-page">
       <SearchForm initialSearchQuery="" onSearchClick={handleSearchClick} />
       <GenreSelect onGenreSelect={handleGenreClick} />
 
@@ -47,6 +52,19 @@ function App() {
         currentSelection={sortByValue}
         onSelectionChange={handleSortChange}
       />
+
+      <Button
+        className={addMovieButton}
+        buttonText={ButtonTexts.AddMovie}
+        onClick={() => setIsAddMovieModalOpened(true)}
+      />
+
+      {isAddMovieModalOpened && (
+        <AddEditMovieDialog
+          onOkClick={() => void 0}
+          onCancelClick={() => setIsAddMovieModalOpened(false)}
+        />
+      )}
 
       {selectedGenre && (
         <div id="for-cypress">Selected genre: {selectedGenre}</div>

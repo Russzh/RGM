@@ -1,19 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
 
 import styles from "./MovieList.module.scss";
+import {
+  Dialog,
+  DialogButtonTexts,
+  DialogConfirmTexts,
+  DialogTitles,
+} from "@shared/components";
 import { moviesList } from "@shared/constants";
 import { MovieCard } from "./MovieCard/MovieCard";
 import { IMovieInfo } from "./MovieCard/MovieCard.types";
+import { AddEditMovieDialog } from "@components/AddEditMovieDialog/AddEditMovieDialog";
 
 const { movieListWrapper } = styles;
 
 const MovieList: React.FC = () => {
+  const [isConfirmDialogOpened, setIsConfirmDialogOpened] = useState(false);
+  const [isEditDialogOpened, setIsEditDialogOpened] = useState(false);
+  const [editedMovie, setEditedMovie] = useState<IMovieInfo | null>(null);
+
+  const handleEditClick = (editedMovieData: IMovieInfo): void => {
+    setIsEditDialogOpened(true);
+    setEditedMovie(editedMovieData);
+  };
+
   return (
-    <div className={movieListWrapper} data-testid="movie-list-wrapper">
-      {moviesList.map((movie: IMovieInfo) => (
-        <MovieCard key={movie.id} movie={movie} />
-      ))}
-    </div>
+    <>
+      <div className={movieListWrapper} data-testid="movie-list-wrapper">
+        {moviesList.map((movie: IMovieInfo) => (
+          <MovieCard
+            key={movie.id}
+            movie={movie}
+            onDeleteClick={() => setIsConfirmDialogOpened(true)}
+            onEditClick={(editedMovieData) => {
+              handleEditClick(editedMovieData);
+            }}
+          />
+        ))}
+      </div>
+
+      {isEditDialogOpened && (
+        <AddEditMovieDialog
+          isEditModal
+          movieData={editedMovie as IMovieInfo}
+          onOkClick={() => setIsEditDialogOpened(false)}
+          onCancelClick={() => setIsEditDialogOpened(false)}
+        />
+      )}
+
+      {isConfirmDialogOpened && (
+        <Dialog
+          title={DialogTitles.Delete}
+          isConfirmModal
+          buttonsText={{
+            okText: DialogButtonTexts.Confirm,
+          }}
+          onOkClick={() => setIsConfirmDialogOpened(false)}
+          onCancelClick={() => setIsConfirmDialogOpened(false)}
+        >
+          {DialogConfirmTexts.Delete}
+        </Dialog>
+      )}
+    </>
   );
 };
 
