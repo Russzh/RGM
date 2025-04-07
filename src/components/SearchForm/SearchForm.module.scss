@@ -1,7 +1,10 @@
 .searchFormContainer {
   display: flex;
   gap: 10px;
-  width: 35%;
+
+  input {
+    width: 100%;
+  }
 
   .searchButton {
     background-color: lightcoral;

@@ -15,7 +15,7 @@ const SearchForm: React.FC<ISearchFormProps> = ({
   initialSearchQuery,
   onSearchClick,
 }) => {
-  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery ?? "");
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();

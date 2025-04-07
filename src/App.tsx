@@ -11,7 +11,7 @@ import {
 } from "./components";
 import { MovieProvider } from "@context/MovieContext";
 import { SortByOptions } from "@components/SortControl/SortControl.types";
-import { Button, ButtonTexts } from "@shared/components";
+import { Button, ButtonTexts, Header } from "@shared/components";
 import styles from "./App.module.scss";
 
 const { app, addMovieButton } = styles;
@@ -40,7 +40,14 @@ function App() {
 
   return (
     <div className={app} id="main-page">
-      <SearchForm initialSearchQuery="" onSearchClick={handleSearchClick} />
+      <Header>
+        <SearchForm onSearchClick={handleSearchClick} />
+        <Button
+          className={addMovieButton}
+          buttonText={ButtonTexts.AddMovie}
+          onClick={() => setIsAddMovieModalOpened(true)}
+        />
+      </Header>
       <GenreSelect onGenreSelect={handleGenreClick} />
 
       <MovieProvider>
@@ -51,12 +58,6 @@ function App() {
       <SortControl
         currentSelection={sortByValue}
         onSelectionChange={handleSortChange}
-      />
-
-      <Button
-        className={addMovieButton}
-        buttonText={ButtonTexts.AddMovie}
-        onClick={() => setIsAddMovieModalOpened(true)}
       />
 
       {isAddMovieModalOpened && (
