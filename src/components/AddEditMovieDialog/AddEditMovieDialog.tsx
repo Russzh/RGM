@@ -10,8 +10,10 @@ import {
   Dialog,
   DialogButtonTexts,
   DialogTitles,
+  datepickerFormat,
 } from "@shared/components";
 import {
+  Genre,
   IMovieInfo,
   movieGenres,
 } from "@components/MovieList/MovieCard/MovieCard.types";
@@ -22,22 +24,20 @@ const { formContainer, formRow, fieldContainerWithLabel, datePickerAntd } =
   styles;
 
 const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
-  onCancelClick,
-  onOkClick,
+  onCancel,
+  onSubmit,
   isEditModal = false,
   movieData,
 }) => {
   const editedMovieData = movieData as IMovieInfo;
-  const [selectedGenres, setSelectedGenres] = useState<string[]>(
+  const [selectedGenres, setSelectedGenres] = useState<Genre[]>(
     isEditModal ? editedMovieData.genres : [],
   );
   const [runtimeInputValue, setRuntimeInputValue] = useState<string>(
     isEditModal ? formatMinutes(editedMovieData.duration) : "",
   );
 
-  const datepickerFormat = "YYYY-MM-DD";
-
-  const handleCheckboxChange = (clickedGenre: string, isChecked: boolean) => {
+  const handleCheckboxChange = (clickedGenre: Genre, isChecked: boolean) => {
     if (isChecked) {
       setSelectedGenres([...selectedGenres, clickedGenre]);
     } else {
@@ -56,8 +56,8 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
         okText: DialogButtonTexts.Submit,
         cancelText: DialogButtonTexts.Reset,
       }}
-      onCancelClick={onCancelClick}
-      onOkClick={onOkClick}
+      onCancelClick={onCancel}
+      onOkClick={onSubmit}
     >
       <form
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}

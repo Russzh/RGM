@@ -43,8 +43,8 @@ const MovieList: React.FC = () => {
         <AddEditMovieDialog
           isEditModal
           movieData={editedMovie as IMovieInfo}
-          onOkClick={() => setIsEditDialogOpened(false)}
-          onCancelClick={() => setIsEditDialogOpened(false)}
+          onSubmit={() => setIsEditDialogOpened(false)}
+          onCancel={() => setIsEditDialogOpened(false)}
         />
       )}
 

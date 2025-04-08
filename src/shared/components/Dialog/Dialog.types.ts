@@ -24,3 +24,5 @@ export enum DialogButtonTexts {
   "Submit" = "SUBMIT",
   "Reset" = "RESET",
 }
+
+export const datepickerFormat = "YYYY-MM-DD";

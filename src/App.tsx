@@ -62,8 +62,8 @@ function App() {
 
       {isAddMovieModalOpened && (
         <AddEditMovieDialog
-          onOkClick={() => void 0}
-          onCancelClick={() => setIsAddMovieModalOpened(false)}
+          onSubmit={() => void 0}
+          onCancel={() => setIsAddMovieModalOpened(false)}
         />
       )}
 

@@ -62,9 +62,7 @@ const MovieCard: React.FC<IMovieCardProps> = ({
           <Button
             className={contextMenuButton}
             buttonText={ButtonTexts.ContextMenu}
-            onClick={(event: React.MouseEvent) =>
-              handleContextMenuToggle(event)
-            }
+            onClick={handleContextMenuToggle}
           />
 
           {isContextMenuOpen && (
