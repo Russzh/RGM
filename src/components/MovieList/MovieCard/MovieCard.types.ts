@@ -5,8 +5,8 @@ export interface IMovieInfo {
   genres: Genre[];
   id: string;
   description: string;
-  rating: number;
-  duration: number;
+  rating: string;
+  duration: string;
 }
 
 export interface IMovieCardProps {

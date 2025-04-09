@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import { Checkbox, DatePicker, Select } from "antd";
 import dayjs from "dayjs";
 
@@ -13,11 +13,14 @@ import {
   datepickerFormat,
 } from "@shared/components";
 import {
-  Genre,
   IMovieInfo,
   movieGenres,
 } from "@components/MovieList/MovieCard/MovieCard.types";
-import { IAddEditMovieDialogProps } from "@components/AddEditMovieDialog/AddEditMovieDialog.types";
+import {
+  FormAction,
+  FormState,
+  IAddEditMovieDialogProps,
+} from "./AddEditMovieDialog.types";
 import { formatMinutes } from "@shared/helpers";
 
 const { formContainer, formRow, fieldContainerWithLabel, datePickerAntd } =
@@ -30,23 +33,56 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
   movieData,
 }) => {
   const editedMovieData = movieData as IMovieInfo;
-  const [selectedGenres, setSelectedGenres] = useState<Genre[]>(
-    isEditModal ? editedMovieData.genres : [],
-  );
-  const [runtimeInputValue, setRuntimeInputValue] = useState<string>(
-    isEditModal ? formatMinutes(editedMovieData.duration) : "",
+
+  const [runtimeDisplayValue, setRuntimeDisplayValue] = useState<string>(
+    isEditModal ? formatMinutes(+editedMovieData.duration) : "",
   );
 
-  const handleCheckboxChange = (clickedGenre: Genre, isChecked: boolean) => {
-    if (isChecked) {
-      setSelectedGenres([...selectedGenres, clickedGenre]);
-    } else {
-      setSelectedGenres(
-        selectedGenres.filter(
-          (selectedGenre) => selectedGenre !== clickedGenre,
-        ),
-      );
+  const initialState: FormState = {
+    title: isEditModal ? editedMovieData.name : "",
+    releaseDate: isEditModal ? editedMovieData.releaseDate : "",
+    imageUrl: isEditModal ? editedMovieData.imageUrl : "",
+    rating: isEditModal ? editedMovieData.rating : "",
+    description: isEditModal ? editedMovieData.description : "",
+    genres: isEditModal ? editedMovieData.genres : [],
+    runtime: isEditModal ? editedMovieData.duration : "",
+  };
+
+  const formReducer = (state: FormState, action: FormAction): FormState => {
+    switch (action.type) {
+      case "SET_TITLE":
+        return { ...state, title: action.payload };
+      case "SET_RELEASE_DATE":
+        return { ...state, releaseDate: action.payload };
+      case "SET_IMAGE_URL":
+        return { ...state, imageUrl: action.payload };
+      case "SET_RATING":
+        return { ...state, rating: action.payload };
+      case "SET_DESCRIPTION":
+        return { ...state, description: action.payload };
+      case "SET_GENRES":
+        return { ...state, genres: action.payload };
+      case "SET_RUNTIME":
+        return { ...state, runtime: action.payload };
+      default:
+        return state;
     }
+  };
+  const [formState, dispatch] = useReducer(formReducer, initialState);
+
+  const handleSubmit = () => {
+    const movieData: IMovieInfo = {
+      id: isEditModal ? editedMovieData.id : new Date().toISOString(),
+      name: formState.title,
+      releaseDate: formState.releaseDate || "",
+      imageUrl: formState.imageUrl,
+      rating: formState.rating,
+      description: formState.description,
+      genres: formState.genres,
+      duration: formState.runtime,
+    };
+
+    onSubmit(movieData);
   };
 
   return (
@@ -57,7 +93,7 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
         cancelText: DialogButtonTexts.Reset,
       }}
       onCancelClick={onCancel}
-      onOkClick={onSubmit}
+      onOkClick={handleSubmit}
     >
       <form
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}
@@ -65,8 +101,10 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
       >
         <div className={formRow}>
           <Input
-            onChange={() => {}}
-            defaultValue={isEditModal ? editedMovieData.name : ""}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              dispatch({ type: "SET_TITLE", payload: e.target.value })
+            }
+            defaultValue={formState.title}
             inputId="add-movie-form-title"
             invalid={false}
             inputPlaceholder={InputPlaceholders.MovieTitle}
@@ -79,14 +117,19 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
             </label>
             <DatePicker
               defaultValue={
-                isEditModal
-                  ? dayjs(editedMovieData.releaseDate, datepickerFormat)
+                formState.releaseDate
+                  ? dayjs(formState.releaseDate, datepickerFormat)
                   : null
               }
               className={datePickerAntd}
               id="add-movie-form-release-date"
               format={datepickerFormat}
-              onChange={() => {}}
+              onChange={(date, dateString) => {
+                dispatch({
+                  type: "SET_RELEASE_DATE",
+                  payload: dateString as string,
+                });
+              }}
               allowClear
               placeholder={InputPlaceholders.MovieReleaseDate}
             />
@@ -95,8 +138,10 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
 
         <div className={formRow}>
           <Input
-            onChange={() => {}}
-            defaultValue={isEditModal ? editedMovieData.imageUrl : ""}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              dispatch({ type: "SET_IMAGE_URL", payload: e.target.value })
+            }
+            defaultValue={formState.imageUrl}
             inputId="add-movie-form-url"
             invalid={false}
             inputPlaceholder={InputPlaceholders.MovieUrl}
@@ -104,8 +149,10 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
           />
 
           <Input
-            onChange={() => {}}
-            defaultValue={isEditModal ? editedMovieData.rating : ""}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              dispatch({ type: "SET_RATING", payload: e.target.value })
+            }
+            defaultValue={formState.rating}
             inputId="add-movie-form-rating"
             invalid={false}
             inputPlaceholder={InputPlaceholders.MovieRating}
@@ -121,19 +168,28 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
             <Select
               mode="multiple"
               placeholder={InputPlaceholders.MovieGenres}
-              value={selectedGenres}
-              onChange={(values) => setSelectedGenres(values)}
+              value={formState.genres}
+              onChange={(values) =>
+                dispatch({ type: "SET_GENRES", payload: values })
+              }
               dropdownRender={() => (
                 <div>
-                  {movieGenres.map((genre, index) => (
+                  {movieGenres.map((listGenre, index) => (
                     <div key={index}>
                       <Checkbox
-                        checked={selectedGenres.includes(genre)}
+                        checked={formState.genres.includes(listGenre)}
                         onChange={(e) =>
-                          handleCheckboxChange(genre, e.target.checked)
+                          dispatch({
+                            type: "SET_GENRES",
+                            payload: e.target.checked
+                              ? [...formState.genres, listGenre]
+                              : formState.genres.filter(
+                                  (formGenre) => formGenre !== listGenre,
+                                ),
+                          })
                         }
                       >
-                        {genre}
+                        {listGenre}
                       </Checkbox>
                     </div>
                   ))}
@@ -143,13 +199,14 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
           </div>
 
           <Input
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setRuntimeInputValue(e.target.value)
-            }
-            onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setRuntimeInputValue(formatMinutes(+e.target.value));
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              dispatch({ type: "SET_RUNTIME", payload: e.target.value });
+              setRuntimeDisplayValue(e.target.value);
             }}
-            currentValue={runtimeInputValue}
+            onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setRuntimeDisplayValue(formatMinutes(+e.target.value));
+            }}
+            currentValue={runtimeDisplayValue}
             inputId="add-movie-form-runtime"
             invalid={false}
             inputPlaceholder={InputPlaceholders.MovieRunTime}
@@ -162,9 +219,11 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
             {InputLabels.Overview}
           </label>
           <textarea
-            onChange={() => {}}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              dispatch({ type: "SET_DESCRIPTION", payload: e.target.value })
+            }
             id="add-movie-form-description"
-            defaultValue={isEditModal ? editedMovieData.description : ""}
+            defaultValue={formState.description}
             placeholder={InputPlaceholders.MovieDescription}
             rows={7}
           />

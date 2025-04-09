@@ -62,7 +62,9 @@ function App() {
 
       {isAddMovieModalOpened && (
         <AddEditMovieDialog
-          onSubmit={() => void 0}
+          onSubmit={(moviePayload) => {
+            console.log(moviePayload);
+          }}
           onCancel={() => setIsAddMovieModalOpened(false)}
         />
       )}
