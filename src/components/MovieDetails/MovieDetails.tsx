@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 
 import styles from "./MovieDetails.module.scss";
 import { MovieContext } from "@context/MovieContext";
+import { formatMinutes } from "@shared/helpers";
 
 const {
   movieDetailsWrapper,
@@ -28,8 +29,8 @@ const MovieDetails: React.FC = () => {
         </div>
         <span>{selectedMovie.genres.join(", ")}</span>
         <div className={movieReleaseWrapper}>
-          <p>{selectedMovie.releaseYear}</p>
-          <p>{selectedMovie.duration}</p>
+          <p>{new Date(selectedMovie.releaseDate).getFullYear()}</p>
+          <p>{formatMinutes(+selectedMovie.duration)}</p>
         </div>
         <span>{selectedMovie.description}</span>
       </div>

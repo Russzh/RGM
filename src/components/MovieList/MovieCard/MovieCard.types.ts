@@ -1,14 +1,30 @@
 export interface IMovieInfo {
   imageUrl: string;
   name: string;
-  releaseYear: number;
-  genres: string[];
+  releaseDate: string;
+  genres: Genre[];
   id: string;
   description: string;
-  rating: number;
+  rating: string;
   duration: string;
 }
 
-export interface IMovieTileProps {
+export interface IMovieCardProps {
   movie: IMovieInfo;
+  onDeleteClick: (movieId: string) => void;
+  onEditClick: (movie: IMovieInfo) => void;
 }
+
+export enum Genre {
+  Action = "Action",
+  Comedy = "Comedy",
+  Drama = "Drama",
+  Horror = "Horror",
+  SciFi = "Sci-Fi",
+  OscarWinningMovie = "Oscar winning Movie",
+  Biography = "Biography",
+  Music = "Music",
+  ActionAndAdventure = "Action and Adventure",
+}
+
+export const movieGenres: Genre[] = Object.values(Genre);

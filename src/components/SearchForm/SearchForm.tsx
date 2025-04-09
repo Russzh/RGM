@@ -15,7 +15,7 @@ const SearchForm: React.FC<ISearchFormProps> = ({
   initialSearchQuery,
   onSearchClick,
 }) => {
-  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery ?? "");
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -28,7 +28,7 @@ const SearchForm: React.FC<ISearchFormProps> = ({
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setSearchQuery(e.target.value)
         }
-        inputValue={searchQuery}
+        currentValue={searchQuery}
         inputId="search-form"
         invalid={false}
         inputPlaceholder={InputPlaceholders.WhatDoYouWantToWatch}

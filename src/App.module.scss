@@ -1,0 +1,18 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 10px;
+
+  .addMovieButton {
+    position: absolute;
+    top: -60px;
+    right: -40px;
+    color: lightcoral;
+    background-color: darkslategray;
+    width: 130px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: bold;
+  }
+}

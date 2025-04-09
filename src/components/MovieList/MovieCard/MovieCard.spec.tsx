@@ -9,7 +9,13 @@ import { ButtonTexts } from "@shared/components";
 
 describe("MovieCard", () => {
   it("should render movieCardWrapper correctly", () => {
-    render(<MovieCard movie={moviesList[0]} />);
+    render(
+      <MovieCard
+        movie={moviesList[0]}
+        onDeleteClick={jest.fn}
+        onEditClick={jest.fn}
+      />,
+    );
 
     const movieCardWrapper = screen.queryByTestId("movie-card-wrapper");
     expect(movieCardWrapper).toBeInTheDocument();
@@ -31,7 +37,11 @@ describe("MovieCard", () => {
           } as unknown as IMovieContextType
         }
       >
-        <MovieCard movie={moviesList[0]} />
+        <MovieCard
+          movie={moviesList[0]}
+          onDeleteClick={jest.fn}
+          onEditClick={jest.fn}
+        />
       </MovieContext.Provider>,
     );
 
@@ -42,7 +52,13 @@ describe("MovieCard", () => {
   });
 
   it("should handle mouse enter/leave and click events correctly", async () => {
-    render(<MovieCard movie={moviesList[0]} />);
+    render(
+      <MovieCard
+        movie={moviesList[0]}
+        onDeleteClick={jest.fn}
+        onEditClick={jest.fn}
+      />,
+    );
 
     const movieNameElement = screen.getByText(moviesList[0].name);
     await userEvent.hover(movieNameElement);

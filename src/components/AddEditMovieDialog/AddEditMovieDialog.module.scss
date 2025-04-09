@@ -1,0 +1,40 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+
+  .formRow {
+    display: flex;
+    gap: 10px;
+  }
+
+  .fieldContainerWithLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .datePickerAntd {
+    height: 37.5px;
+    border: 1px solid gray;
+  }
+}
+
+:global {
+  .ant-select.ant-select-outlined {
+    .ant-select-selector {
+      min-height: 37px;
+      border: 1px solid gray;
+
+      .ant-select-selection-wrap {
+        align-self: center;
+      }
+    }
+
+    .ant-select-selection-overflow .ant-select-selection-item {
+      margin-block: 4px;
+    }
+  }
+}

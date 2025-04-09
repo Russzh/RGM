@@ -1,4 +1,4 @@
 export interface ISearchFormProps {
-  initialSearchQuery: string;
+  initialSearchQuery?: string;
   onSearchClick: (query: string) => void;
 }
