@@ -20,6 +20,18 @@ describe("SearchForm", () => {
     expect(input.value).toBe("Initial Query");
   });
 
+  it("initializes searchQuery with an empty string if initialSearchQuery is not provided", () => {
+    render(
+      <SearchForm initialSearchQuery={undefined} onSearchClick={jest.fn()} />,
+    );
+
+    const input = screen.getByPlaceholderText(
+      InputPlaceholders.WhatDoYouWantToWatch,
+    ) as HTMLInputElement;
+
+    expect(input.value).toBe("");
+  });
+
   it("updates search query on input change", async () => {
     render(<SearchForm initialSearchQuery="" onSearchClick={jest.fn()} />);
     const input = screen.getByPlaceholderText(

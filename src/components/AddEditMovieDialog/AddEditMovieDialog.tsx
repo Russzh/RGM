@@ -8,7 +8,7 @@ import {
   InputLabels,
   InputPlaceholders,
   Dialog,
-  DialogButtonTexts,
+  ButtonTexts,
   DialogTitles,
   datepickerFormat,
 } from "@shared/components";
@@ -64,8 +64,6 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
         return { ...state, genres: action.payload };
       case "SET_RUNTIME":
         return { ...state, runtime: action.payload };
-      default:
-        return state;
     }
   };
   const [formState, dispatch] = useReducer(formReducer, initialState);
@@ -89,15 +87,17 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
     <Dialog
       title={isEditModal ? DialogTitles.Edit : DialogTitles.Add}
       buttonsText={{
-        okText: DialogButtonTexts.Submit,
-        cancelText: DialogButtonTexts.Reset,
+        okText: ButtonTexts.Submit,
+        cancelText: ButtonTexts.Reset,
       }}
       onCancelClick={onCancel}
       onOkClick={handleSubmit}
     >
       <form
-        onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}
         className={formContainer}
+        onKeyDown={(e: React.KeyboardEvent<HTMLFormElement>) =>
+          e.key === "Enter" ? handleSubmit() : null
+        }
       >
         <div className={formRow}>
           <Input

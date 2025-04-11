@@ -7,7 +7,9 @@ const { headerContainer, headerContent } = styles;
 const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return (
     <header className={headerContainer}>
-      <div className={headerContent}>{children}</div>
+      <div data-testid="header-content" className={headerContent}>
+        {children}
+      </div>
     </header>
   );
 };

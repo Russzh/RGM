@@ -13,4 +13,7 @@ export enum ButtonTexts {
   "Edit" = "Edit",
   "Delete" = "Delete",
   "AddMovie" = "+ Add Movie",
+  "Confirm" = "CONFIRM",
+  "Submit" = "SUBMIT",
+  "Reset" = "RESET",
 }
