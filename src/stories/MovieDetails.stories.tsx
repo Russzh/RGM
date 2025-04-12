@@ -18,10 +18,13 @@ const meta: Meta<typeof MovieDetails> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof MovieDetails>;
+type StoryArgs = {
+  selectedMovie: IMovieInfo;
+};
+type Story = StoryObj<StoryArgs>;
 
 export const MovieDetailsComponent: Story = {
-  render: (args: any) => (
+  render: (args: { selectedMovie: IMovieInfo }) => (
     <MovieContext.Provider
       value={{
         selectedMovie: args.selectedMovie as IMovieInfo,

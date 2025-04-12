@@ -17,7 +17,7 @@ import {
 
 const mockOnCancel = jest.fn();
 const mockOnSubmit = jest.fn();
-const addEditModalSetup = (isEditModal: boolean = false): void => {
+const addEditModalSetup = (isEditModal = false): void => {
   render(
     <AddEditMovieDialog
       onCancel={mockOnCancel}

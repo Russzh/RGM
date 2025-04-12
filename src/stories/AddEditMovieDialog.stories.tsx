@@ -48,7 +48,7 @@ export const AddMovieDialog: Story = {
       if (key) {
         setIsModalOpen(true);
       }
-    }, [args.isEditModal]);
+    }, [args.isEditModal, key]);
 
     useEffect(() => {
       setKey((prevKey) => prevKey + 1);
