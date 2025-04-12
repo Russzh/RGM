@@ -19,10 +19,4 @@ export enum DialogConfirmTexts {
   "Delete" = "Are you sure you want to delete this movie?",
 }
 
-export enum DialogButtonTexts {
-  "Confirm" = "CONFIRM",
-  "Submit" = "SUBMIT",
-  "Reset" = "RESET",
-}
-
 export const datepickerFormat = "YYYY-MM-DD";

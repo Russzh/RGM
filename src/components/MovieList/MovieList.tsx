@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styles from "./MovieList.module.scss";
 import {
   Dialog,
-  DialogButtonTexts,
+  ButtonTexts,
   DialogConfirmTexts,
   DialogTitles,
 } from "@shared/components";
@@ -53,7 +53,7 @@ const MovieList: React.FC = () => {
           title={DialogTitles.Delete}
           isConfirmModal
           buttonsText={{
-            okText: DialogButtonTexts.Confirm,
+            okText: ButtonTexts.Confirm,
           }}
           onOkClick={() => setIsConfirmDialogOpened(false)}
           onCancelClick={() => setIsConfirmDialogOpened(false)}
