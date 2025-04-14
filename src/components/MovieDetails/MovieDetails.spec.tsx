@@ -23,17 +23,4 @@ describe("MovieDetails", () => {
     expect(movieName).toBeInTheDocument();
     expect(movieName).toHaveTextContent(moviesList[0].title.toUpperCase());
   });
-
-  it("shouldn`t render anything when no movie is selected", () => {
-    render(
-      <MovieContext.Provider
-        value={{ selectedMovie: null } as IMovieContextType}
-      >
-        <MovieDetails selectedMovieData={moviesList[0]} />
-      </MovieContext.Provider>,
-    );
-
-    const movieDetailsWrapper = screen.queryByTestId("movie-details-wrapper");
-    expect(movieDetailsWrapper).not.toBeInTheDocument();
-  });
 });

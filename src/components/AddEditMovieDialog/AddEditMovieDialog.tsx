@@ -42,7 +42,7 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
     title: isEditModal ? editedMovieData.title : "",
     release_date: isEditModal ? editedMovieData.release_date : "",
     poster_path: isEditModal ? editedMovieData.poster_path : "",
-    vote_average: isEditModal ? editedMovieData.vote_average : 0,
+    vote_average: isEditModal ? editedMovieData.vote_average : "",
     overview: isEditModal ? editedMovieData.overview : "",
     genres: isEditModal ? editedMovieData.genres : [],
     runtime: isEditModal ? editedMovieData.runtime : 0,

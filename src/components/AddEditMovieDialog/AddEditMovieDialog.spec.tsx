@@ -153,6 +153,7 @@ describe("AddEditMovieDialog", () => {
   });
 
   it("should call onSubmit with correct data when Submit button is clicked", async () => {
+    jest.clearAllMocks();
     addEditModalSetup();
 
     await userEvent.type(
@@ -167,14 +168,14 @@ describe("AddEditMovieDialog", () => {
     await userEvent.click(screen.getByText(ButtonTexts.Submit));
 
     expect(mockOnSubmit).toHaveBeenCalledWith({
-      id: expect.any(String),
-      name: "The Matrix",
-      releaseDate: "",
-      imageUrl: "",
-      rating: "",
-      description: "",
+      id: expect.any(Number),
+      title: "The Matrix",
+      release_date: "",
+      poster_path: "",
+      vote_average: "",
+      overview: "",
       genres: [],
-      duration: "120",
+      runtime: 120,
     });
   });
 

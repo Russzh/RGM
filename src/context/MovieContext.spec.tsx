@@ -6,6 +6,8 @@ import { MovieContext, MovieProvider } from "./MovieContext";
 import { MovieDetails } from "@components/MovieDetails/MovieDetails";
 import { MovieList } from "@components/MovieList/MovieList";
 import { moviesList } from "@shared/constants";
+import { MovieListPage } from "../pages";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 describe("MovieContext", () => {
   it("should provide context values to children if MovieCard is clicked", async () => {
@@ -27,10 +29,11 @@ describe("MovieContext", () => {
 
   it("should not provide any context values to children if MovieCard is not clicked", async () => {
     render(
-      <MovieProvider>
-        <MovieList movieList={moviesList} />
-        <MovieDetails selectedMovieData={moviesList[0]} />
-      </MovieProvider>,
+      <QueryClientProvider client={new QueryClient()}>
+        <MovieProvider>
+          <MovieListPage />
+        </MovieProvider>
+      </QueryClientProvider>,
     );
 
     const movieDetailsWrapper = screen.queryByTestId("movie-details-wrapper");

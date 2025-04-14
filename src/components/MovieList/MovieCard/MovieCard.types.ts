@@ -5,7 +5,7 @@ export interface IMovieInfo {
   genres: Genre[];
   id: number;
   overview: string;
-  vote_average: number;
+  vote_average: string | number;
   runtime: number;
 }
 
