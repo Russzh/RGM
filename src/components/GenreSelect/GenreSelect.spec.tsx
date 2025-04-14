@@ -7,7 +7,13 @@ import { genresList } from "@shared/constants";
 
 describe("GenreSelect", () => {
   it("renders all genres as buttons", () => {
-    render(<GenreSelect onGenreSelect={jest.fn()} />);
+    render(
+      <GenreSelect
+        activeGenre={genresList[0].name}
+        genresList={genresList}
+        onGenreSelect={jest.fn()}
+      />,
+    );
 
     genresList.forEach((genre) => {
       expect(screen.getByText(genre.name.toUpperCase())).toBeInTheDocument();
@@ -16,7 +22,13 @@ describe("GenreSelect", () => {
 
   it("calls onGenreSelect with the correct genre name when a button is clicked", async () => {
     const mockOnGenreSelect = jest.fn();
-    render(<GenreSelect onGenreSelect={mockOnGenreSelect} />);
+    render(
+      <GenreSelect
+        activeGenre={genresList[0].name}
+        genresList={genresList}
+        onGenreSelect={mockOnGenreSelect}
+      />,
+    );
 
     const firstGenreButton = screen.getByText(genresList[0].name.toUpperCase());
 
@@ -27,7 +39,13 @@ describe("GenreSelect", () => {
   });
 
   it("renders buttons with the correct class name", () => {
-    render(<GenreSelect onGenreSelect={jest.fn()} />);
+    render(
+      <GenreSelect
+        activeGenre={genresList[0].name}
+        genresList={genresList}
+        onGenreSelect={jest.fn()}
+      />,
+    );
 
     const buttons = screen.getAllByRole("button");
 

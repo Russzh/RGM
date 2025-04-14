@@ -29,36 +29,36 @@ export const genresList: IGenreItem[] = [
 
 export const moviesList: IMovieInfo[] = [
   {
-    imageUrl: "/movie-images/pulp-fiction.png",
-    name: "Pulp Fiction",
-    releaseDate: "2004-10-14",
+    poster_path: "/movie-images/pulp-fiction.png",
+    title: "Pulp Fiction",
+    release_date: "2004-10-14",
     genres: [Genre.ActionAndAdventure],
-    id: "295a18154-d45b-4ed7-9cf7-b2417bcbf748",
-    description:
+    id: 4797748,
+    overview:
       "Jules Winnfield (Samuel L. Jackson) and Vincent Vega (John Travolta) are two hit men who are out to retrieve a suitcase stolen from their employer, mob boss Marsellus Wallace (Ving Rhames). Wallace has also asked Vincent to take his wife Mia (Uma Thurman) out a few days later when Wallace himself will be out of town. Butch Coolidge (Bruce Willis) is an aging boxer who is paid by Wallace to lose his fight. The lives of these seemingly unrelated people are woven together comprising of a series of funny, bizarre and uncalled-for incidents.—Soumitra.",
-    rating: "8.9",
-    duration: "135",
+    vote_average: 8.9,
+    runtime: 135,
   },
   {
-    imageUrl: "/movie-images/bohemian-rhapsody.png",
-    name: "Bohemian Rhapsody",
-    releaseDate: "2002-11-11",
+    poster_path: "/movie-images/bohemian-rhapsody.png",
+    title: "Bohemian Rhapsody",
+    release_date: "2002-11-11",
     genres: [Genre.Drama, Genre.Biography, Genre.Music],
-    id: "295a18154-d45fsb-4ed7-9cf7-b2417bcbf748",
-    description:
+    id: 2417748,
+    overview:
       "A biographical drama about the legendary British rock band Queen, focusing on the life of their lead singer Freddie Mercury (Rami Malek). The film traces the band's rise to fame, their iconic performance at Live Aid (1985), and Mercury's personal struggles with identity, relationships, and his AIDS diagnosis. The title references Queen's groundbreaking 1975 hit song, which became a defining anthem of their career.",
-    rating: "7.9",
-    duration: "94",
+    vote_average: 7.9,
+    runtime: 94,
   },
   {
-    imageUrl: "/movie-images/kill-bill-vol2.png",
-    name: "Bill: Vol 2",
-    releaseDate: "1994-12-12",
+    poster_path: "/movie-images/kill-bill-vol2.png",
+    title: "Bill: Vol 2",
+    release_date: "1994-12-12",
     genres: [Genre.OscarWinningMovie],
-    id: "295a18154-d45fsb-4ed7ds-9cf7-b2417bcbf748",
-    description:
+    id: 29518154,
+    overview:
       "The second installment of Quentin Tarantino's two-part crime saga, 'Kill Bill: Vol 2' continues the Bride's (Uma Thurman) quest for revenge against her former allies in the Deadly Viper Assassination Squad. This volume delves deeper into her training under the ruthless Pai Mei and her final confrontations with Bill (David Carradine) and Elle Driver (Daryl Hannah). A masterful blend of martial arts, spaghetti western influences, and Tarantino's signature dialogue.",
-    rating: "9.9",
-    duration: "134",
+    vote_average: 9.9,
+    runtime: 134,
   },
 ];

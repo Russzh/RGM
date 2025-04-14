@@ -18,7 +18,6 @@ import {
 } from "@components/MovieList/MovieCard/MovieCard.types";
 import {
   FormAction,
-  FormState,
   IAddEditMovieDialogProps,
 } from "./AddEditMovieDialog.types";
 import { formatMinutes } from "@shared/helpers";
@@ -35,31 +34,32 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
   const editedMovieData = movieData as IMovieInfo;
 
   const [runtimeDisplayValue, setRuntimeDisplayValue] = useState<string>(
-    isEditModal ? formatMinutes(+editedMovieData.duration) : "",
+    isEditModal ? formatMinutes(editedMovieData.runtime) : "",
   );
 
-  const initialState: FormState = {
-    title: isEditModal ? editedMovieData.name : "",
-    releaseDate: isEditModal ? editedMovieData.releaseDate : "",
-    imageUrl: isEditModal ? editedMovieData.imageUrl : "",
-    rating: isEditModal ? editedMovieData.rating : "",
-    description: isEditModal ? editedMovieData.description : "",
+  const initialState: IMovieInfo = {
+    id: isEditModal ? editedMovieData.id : 0,
+    title: isEditModal ? editedMovieData.title : "",
+    release_date: isEditModal ? editedMovieData.release_date : "",
+    poster_path: isEditModal ? editedMovieData.poster_path : "",
+    vote_average: isEditModal ? editedMovieData.vote_average : 0,
+    overview: isEditModal ? editedMovieData.overview : "",
     genres: isEditModal ? editedMovieData.genres : [],
-    runtime: isEditModal ? editedMovieData.duration : "",
+    runtime: isEditModal ? editedMovieData.runtime : 0,
   };
 
-  const formReducer = (state: FormState, action: FormAction): FormState => {
+  const formReducer = (state: IMovieInfo, action: FormAction): IMovieInfo => {
     switch (action.type) {
       case "SET_TITLE":
         return { ...state, title: action.payload };
       case "SET_RELEASE_DATE":
-        return { ...state, releaseDate: action.payload };
+        return { ...state, release_date: action.payload };
       case "SET_IMAGE_URL":
-        return { ...state, imageUrl: action.payload };
+        return { ...state, poster_path: action.payload };
       case "SET_RATING":
-        return { ...state, rating: action.payload };
+        return { ...state, vote_average: action.payload };
       case "SET_DESCRIPTION":
-        return { ...state, description: action.payload };
+        return { ...state, overview: action.payload };
       case "SET_GENRES":
         return { ...state, genres: action.payload };
       case "SET_RUNTIME":
@@ -70,14 +70,14 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
 
   const handleSubmit = () => {
     const movieData: IMovieInfo = {
-      id: isEditModal ? editedMovieData.id : new Date().toISOString(),
-      name: formState.title,
-      releaseDate: formState.releaseDate || "",
-      imageUrl: formState.imageUrl,
-      rating: formState.rating,
-      description: formState.description,
+      id: isEditModal ? editedMovieData.id : new Date().getMilliseconds(),
+      title: formState.title,
+      release_date: formState.release_date || "",
+      poster_path: formState.poster_path,
+      vote_average: formState.vote_average,
+      overview: formState.overview,
       genres: formState.genres,
-      duration: formState.runtime,
+      runtime: formState.runtime,
     };
 
     onSubmit(movieData);
@@ -117,8 +117,8 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
             </label>
             <DatePicker
               defaultValue={
-                formState.releaseDate
-                  ? dayjs(formState.releaseDate, datepickerFormat)
+                formState.release_date
+                  ? dayjs(formState.release_date, datepickerFormat)
                   : null
               }
               className={datePickerAntd}
@@ -141,7 +141,7 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               dispatch({ type: "SET_IMAGE_URL", payload: e.target.value })
             }
-            defaultValue={formState.imageUrl}
+            defaultValue={formState.poster_path}
             inputId="add-movie-form-url"
             invalid={false}
             inputPlaceholder={InputPlaceholders.MovieUrl}
@@ -150,9 +150,9 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
 
           <Input
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              dispatch({ type: "SET_RATING", payload: e.target.value })
+              dispatch({ type: "SET_RATING", payload: +e.target.value })
             }
-            defaultValue={formState.rating}
+            defaultValue={formState.vote_average}
             inputId="add-movie-form-rating"
             invalid={false}
             inputPlaceholder={InputPlaceholders.MovieRating}
@@ -200,7 +200,7 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
 
           <Input
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              dispatch({ type: "SET_RUNTIME", payload: e.target.value });
+              dispatch({ type: "SET_RUNTIME", payload: +e.target.value });
               setRuntimeDisplayValue(e.target.value);
             }}
             onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -223,7 +223,7 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
               dispatch({ type: "SET_DESCRIPTION", payload: e.target.value })
             }
             id="add-movie-form-description"
-            defaultValue={formState.description}
+            defaultValue={formState.overview}
             placeholder={InputPlaceholders.MovieDescription}
             rows={7}
           />

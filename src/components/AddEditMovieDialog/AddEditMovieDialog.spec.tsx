@@ -34,12 +34,12 @@ describe("AddEditMovieDialog", () => {
 
     expect(screen.getByText(DialogTitles.Edit)).toBeInTheDocument();
 
-    expect(screen.getByDisplayValue(moviesList[0].name)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(moviesList[0].title)).toBeInTheDocument();
     expect(
-      screen.getByDisplayValue(moviesList[0].releaseDate),
+      screen.getByDisplayValue(moviesList[0].release_date),
     ).toBeInTheDocument();
     expect(
-      screen.getByDisplayValue(formatMinutes(+moviesList[0].duration)),
+      screen.getByDisplayValue(formatMinutes(+moviesList[0].runtime)),
     ).toBeInTheDocument();
   });
 

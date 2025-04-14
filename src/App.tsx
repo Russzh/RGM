@@ -1,79 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 
-import "./App.module.scss";
-import {
-  SearchForm,
-  GenreSelect,
-  MovieList,
-  MovieDetails,
-  SortControl,
-  AddEditMovieDialog,
-} from "./components";
-import { MovieProvider } from "@context/MovieContext";
-import { SortByOptions } from "@components/SortControl/SortControl.types";
-import { Button, ButtonTexts, Header } from "@shared/components";
 import styles from "./App.module.scss";
+import { MovieListPage } from "./pages";
+import { MovieProvider } from "@context/MovieContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const { app, addMovieButton } = styles;
+const { appContainer } = styles;
 
-function App() {
-  const [selectedGenre, setSelectedGenre] = useState<string>();
-  const [sortByValue, setSortByValue] = useState<string>(
-    Object.keys(SortByOptions)[0],
-  );
-  const [isAddMovieModalOpened, setIsAddMovieModalOpened] =
-    useState<boolean>(false);
+const queryClient = new QueryClient();
 
-  const handleSortChange = (newValue: string): void => {
-    console.log("Selected sort option:", newValue);
-    setSortByValue(newValue);
-  };
-
-  const handleGenreClick = (genre: string): void => {
-    console.log(`Selected genre: ${genre}`);
-    setSelectedGenre(genre);
-  };
-
-  const handleSearchClick = (query: string): void => {
-    console.log("Search triggered with query:", query);
-  };
-
-  return (
-    <div className={app} id="main-page">
-      <Header>
-        <SearchForm onSearchClick={handleSearchClick} />
-        <Button
-          className={addMovieButton}
-          buttonText={ButtonTexts.AddMovie}
-          onClick={() => setIsAddMovieModalOpened(true)}
-        />
-      </Header>
-      <GenreSelect onGenreSelect={handleGenreClick} />
-
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <div className={appContainer} id="main-page">
       <MovieProvider>
-        <MovieList />
-        <MovieDetails />
+        <MovieListPage />
       </MovieProvider>
-
-      <SortControl
-        currentSelection={sortByValue}
-        onSelectionChange={handleSortChange}
-      />
-
-      {isAddMovieModalOpened && (
-        <AddEditMovieDialog
-          onSubmit={(moviePayload) => {
-            console.log(moviePayload);
-          }}
-          onCancel={() => setIsAddMovieModalOpened(false)}
-        />
-      )}
-
-      {selectedGenre && (
-        <div id="for-cypress">Selected genre: {selectedGenre}</div>
-      )}
     </div>
-  );
-}
+  </QueryClientProvider>
+);
 
 export default App;

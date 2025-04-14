@@ -48,11 +48,11 @@ const MovieCard: React.FC<IMovieCardProps> = ({
       onMouseLeave={handleMouseLeave}
       data-testid="movie-card-wrapper"
     >
-      <img src={movie.imageUrl} alt={movie.name} className={movieImage} />
+      <img src={movie.poster_path} alt={movie.title} className={movieImage} />
       <div className={movieNameWrapper}>
-        <h5 className={movieName}>{movie.name}</h5>
+        <h5 className={movieName}>{movie.title}</h5>
         <span className={releaseYear}>
-          {new Date(movie.releaseDate).getFullYear()}
+          {new Date(movie.release_date).getFullYear()}
         </span>
       </div>
       <span>{movie.genres.join(", ")}</span>

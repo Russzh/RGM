@@ -4,7 +4,7 @@ import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
 
 export interface IMovieContextType {
   selectedMovie: IMovieInfo | null;
-  setSelectedMovie: (movie: IMovieInfo) => void;
+  setSelectedMovie: (movie: IMovieInfo | null) => void;
 }
 
 export const MovieContext = createContext<IMovieContextType>({

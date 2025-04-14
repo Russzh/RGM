@@ -21,9 +21,9 @@ describe("MovieCard", () => {
     expect(movieCardWrapper).toBeInTheDocument();
     expect(screen.getAllByRole("img")).toHaveLength(1);
 
-    const movieImage = screen.getByAltText(moviesList[0].name);
+    const movieImage = screen.getByAltText(moviesList[0].title);
     expect(movieImage).toBeInTheDocument();
-    expect(movieImage).toHaveAttribute("src", moviesList[0].imageUrl);
+    expect(movieImage).toHaveAttribute("src", moviesList[0].poster_path);
   });
 
   it("should call setSelectedMovie with correct value when MovieCard is clicked", async () => {
@@ -60,7 +60,7 @@ describe("MovieCard", () => {
       />,
     );
 
-    const movieNameElement = screen.getByText(moviesList[0].name);
+    const movieNameElement = screen.getByText(moviesList[0].title);
     await userEvent.hover(movieNameElement);
     const contextMenuButton = screen.getByText(ButtonTexts.ContextMenu);
     expect(contextMenuButton).toBeInTheDocument();

@@ -11,8 +11,8 @@ describe("MovieContext", () => {
   it("should provide context values to children if MovieCard is clicked", async () => {
     render(
       <MovieProvider>
-        <MovieList />
-        <MovieDetails />
+        <MovieList movieList={moviesList} />
+        <MovieDetails selectedMovieData={moviesList[0]} />
       </MovieProvider>,
     );
 
@@ -28,8 +28,8 @@ describe("MovieContext", () => {
   it("should not provide any context values to children if MovieCard is not clicked", async () => {
     render(
       <MovieProvider>
-        <MovieList />
-        <MovieDetails />
+        <MovieList movieList={moviesList} />
+        <MovieDetails selectedMovieData={moviesList[0]} />
       </MovieProvider>,
     );
 
@@ -48,7 +48,7 @@ describe("MovieContext", () => {
             data-testid="set-movie-button"
           ></button>
           <span data-testid="selected-movie">
-            {selectedMovie ? selectedMovie.name : "No movie selected"}
+            {selectedMovie ? selectedMovie.title : "No movie selected"}
           </span>
         </div>
       );
@@ -67,7 +67,7 @@ describe("MovieContext", () => {
     await userEvent.click(screen.getByTestId("set-movie-button"));
 
     expect(screen.getByTestId("selected-movie").textContent).toBe(
-      moviesList[0].name,
+      moviesList[0].title,
     );
   });
 });

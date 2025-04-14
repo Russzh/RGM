@@ -1,6 +1,16 @@
 .movieDetailsWrapper {
   display: flex;
   gap: 30px;
+  background-color: #7f7f7f;
+  padding: 20px 40px;
+
+  .searchIcon {
+    position: absolute;
+    right: 100px;
+    cursor: pointer;
+    font-size: 20px;
+    color: lightcoral;
+  }
 
   .movieDescriptionWrapper {
     display: flex;
@@ -23,7 +33,7 @@
       display: flex;
       gap: 30px;
       margin: 15px 0;
-      color: red;
+      color: lightcoral;
     }
   }
 }
