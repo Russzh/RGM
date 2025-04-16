@@ -17,6 +17,15 @@ const {
 
 const MovieDetails: React.FC<IMovieDetailsProps> = ({ selectedMovieData }) => {
   const { setSelectedMovie } = useContext(MovieContext);
+  const {
+    poster_path,
+    title,
+    genres,
+    vote_average,
+    runtime,
+    overview,
+    release_date,
+  } = selectedMovieData;
 
   return (
     <div className={movieDetailsWrapper} data-testid="movie-details-wrapper">
@@ -24,18 +33,18 @@ const MovieDetails: React.FC<IMovieDetailsProps> = ({ selectedMovieData }) => {
         className={searchIcon}
         onClick={() => setSelectedMovie(null)}
       />
-      <img src={selectedMovieData.poster_path} alt={selectedMovieData.title} />
+      <img src={poster_path} alt={title} />
       <div className={movieDescriptionWrapper}>
         <div className={movieNameWrapper}>
-          <h3>{selectedMovieData.title.toUpperCase()}</h3>
-          <div className={movieRating}>{selectedMovieData.vote_average}</div>
+          <h3>{title.toUpperCase()}</h3>
+          <div className={movieRating}>{vote_average}</div>
         </div>
-        <span>{selectedMovieData.genres.join(", ")}</span>
+        <span>{genres.join(", ")}</span>
         <div className={movieReleaseWrapper}>
-          <p>{new Date(selectedMovieData.release_date).getFullYear()}</p>
-          <p>{formatMinutes(selectedMovieData.runtime)}</p>
+          <p>{new Date(release_date).getFullYear()}</p>
+          <p>{formatMinutes(runtime)}</p>
         </div>
-        <span>{selectedMovieData.overview}</span>
+        <span>{overview}</span>
       </div>
     </div>
   );

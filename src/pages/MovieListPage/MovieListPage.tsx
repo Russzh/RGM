@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 import {
   SearchForm,
@@ -16,6 +15,7 @@ import { Button, ButtonTexts, Header } from "@shared/components";
 import styles from "./MovieListPage.module.scss";
 import { genresList } from "@shared/constants";
 import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
+import { fetchMovies } from "../../api/fetchData";
 
 const { addMovieButton, genreSortControls, mainContent, moviesNumber } = styles;
 
@@ -30,21 +30,6 @@ const MovieListPage: React.FC = () => {
     useState<boolean>(false);
   const { selectedMovie, setSelectedMovie } = useContext(MovieContext);
 
-  const fetchMovies = async (
-    params: Record<string, string | number>,
-  ): Promise<{
-    data: IMovieInfo[];
-    limit: number;
-    offset: number;
-    totalAmount: number;
-  }> => {
-    const response = await axios.get("http://localhost:4000/movies", {
-      params,
-    });
-
-    return response.data;
-  };
-
   const { data: responseMovies } = useQuery({
     queryKey: ["responseMovies", searchFormQuery, sortCriterion, activeGenre],
     queryFn: () =>
@@ -54,8 +39,7 @@ const MovieListPage: React.FC = () => {
         sortBy: sortCriterion,
         sortOrder: "asc",
         filter: activeGenre === genresList[0].name ? "" : activeGenre,
-        limit: 10,
-        offset: 0,
+        limit: -1,
       }),
   });
 
@@ -101,9 +85,11 @@ const MovieListPage: React.FC = () => {
           />
         </section>
 
-        <p
-          className={moviesNumber}
-        >{`${responseMovies?.totalAmount} movies found`}</p>
+        {responseMovies && (
+          <p
+            className={moviesNumber}
+          >{`${responseMovies.data.length} movies found`}</p>
+        )}
         {movieList && <MovieList movieList={movieList} />}
       </main>
 

@@ -25,6 +25,7 @@ const MovieCard: React.FC<IMovieCardProps> = ({
   const [isContextMenuVisible, setIsContextMenuVisible] = React.useState(false);
 
   const { setSelectedMovie } = useContext(MovieContext);
+  const { poster_path, genres, title, release_date, id } = movie;
 
   const handleContextMenuToggle = (event: React.MouseEvent): void => {
     event.stopPropagation();
@@ -48,14 +49,14 @@ const MovieCard: React.FC<IMovieCardProps> = ({
       onMouseLeave={handleMouseLeave}
       data-testid="movie-card-wrapper"
     >
-      <img src={movie.poster_path} alt={movie.title} className={movieImage} />
+      <img src={poster_path} alt={title} className={movieImage} />
       <div className={movieNameWrapper}>
-        <h5 className={movieName}>{movie.title}</h5>
+        <h5 className={movieName}>{title}</h5>
         <span className={releaseYear}>
-          {new Date(movie.release_date).getFullYear()}
+          {new Date(release_date).getFullYear()}
         </span>
       </div>
-      <span>{movie.genres.join(", ")}</span>
+      <span>{genres.join(", ")}</span>
 
       {isContextMenuVisible && (
         <>
@@ -81,7 +82,7 @@ const MovieCard: React.FC<IMovieCardProps> = ({
                 buttonText={ButtonTexts.Delete}
                 onClick={(event: React.MouseEvent) => {
                   event.stopPropagation();
-                  onDeleteClick(movie.id);
+                  onDeleteClick(id);
                 }}
               />
             </div>
