@@ -11,29 +11,16 @@ describe("MovieDetails", () => {
       <MovieContext.Provider
         value={{ selectedMovie: moviesList[0] } as IMovieContextType}
       >
-        <MovieDetails />
+        <MovieDetails selectedMovieData={moviesList[0]} />
       </MovieContext.Provider>,
     );
 
-    const movieImage = screen.getByAltText(moviesList[0].name);
+    const movieImage = screen.getByAltText(moviesList[0].title);
     expect(movieImage).toBeInTheDocument();
-    expect(movieImage).toHaveAttribute("src", moviesList[0].imageUrl);
+    expect(movieImage).toHaveAttribute("src", moviesList[0].poster_path);
 
     const movieName = screen.getByRole("heading", { level: 3 });
     expect(movieName).toBeInTheDocument();
-    expect(movieName).toHaveTextContent(moviesList[0].name.toUpperCase());
-  });
-
-  it("shouldn`t render anything when no movie is selected", () => {
-    render(
-      <MovieContext.Provider
-        value={{ selectedMovie: null } as IMovieContextType}
-      >
-        <MovieDetails />
-      </MovieContext.Provider>,
-    );
-
-    const movieDetailsWrapper = screen.queryByTestId("movie-details-wrapper");
-    expect(movieDetailsWrapper).not.toBeInTheDocument();
+    expect(movieName).toHaveTextContent(moviesList[0].title.toUpperCase());
   });
 });

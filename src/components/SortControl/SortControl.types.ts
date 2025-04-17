@@ -4,6 +4,6 @@ export interface ISortControlProps {
 }
 
 export enum SortByOptions {
-  "ReleaseDate" = "RELEASE DATE",
-  "Title" = "TITLE",
+  "release_date" = "RELEASE DATE",
+  "title" = "TITLE",
 }

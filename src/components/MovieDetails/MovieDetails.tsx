@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
+import { SearchOutlined } from "@ant-design/icons";
 
 import styles from "./MovieDetails.module.scss";
-import { MovieContext } from "@context/MovieContext";
 import { formatMinutes } from "@shared/helpers";
+import { IMovieDetailsProps } from "@components/MovieDetails/MovieDetails.types";
+import { MovieContext } from "@context/MovieContext";
 
 const {
   movieDetailsWrapper,
@@ -10,29 +12,39 @@ const {
   movieDescriptionWrapper,
   movieRating,
   movieReleaseWrapper,
+  searchIcon,
 } = styles;
 
-const MovieDetails: React.FC = () => {
-  const { selectedMovie } = useContext(MovieContext);
-
-  if (!selectedMovie) {
-    return null;
-  }
+const MovieDetails: React.FC<IMovieDetailsProps> = ({ selectedMovieData }) => {
+  const { setSelectedMovie } = useContext(MovieContext);
+  const {
+    poster_path,
+    title,
+    genres,
+    vote_average,
+    runtime,
+    overview,
+    release_date,
+  } = selectedMovieData;
 
   return (
     <div className={movieDetailsWrapper} data-testid="movie-details-wrapper">
-      <img src={selectedMovie.imageUrl} alt={selectedMovie.name} />
+      <SearchOutlined
+        className={searchIcon}
+        onClick={() => setSelectedMovie(null)}
+      />
+      <img src={poster_path} alt={title} />
       <div className={movieDescriptionWrapper}>
         <div className={movieNameWrapper}>
-          <h3>{selectedMovie.name.toUpperCase()}</h3>
-          <div className={movieRating}>{selectedMovie.rating}</div>
+          <h3>{title.toUpperCase()}</h3>
+          <div className={movieRating}>{vote_average}</div>
         </div>
-        <span>{selectedMovie.genres.join(", ")}</span>
+        <span>{genres.join(", ")}</span>
         <div className={movieReleaseWrapper}>
-          <p>{new Date(selectedMovie.releaseDate).getFullYear()}</p>
-          <p>{formatMinutes(+selectedMovie.duration)}</p>
+          <p>{new Date(release_date).getFullYear()}</p>
+          <p>{formatMinutes(runtime)}</p>
         </div>
-        <span>{selectedMovie.description}</span>
+        <span>{overview}</span>
       </div>
     </div>
   );

@@ -11,15 +11,15 @@ import {
 import { moviesList } from "@shared/constants";
 
 const setupToSeeContextMenuBtns = async (): Promise<void> => {
-  render(<MovieList />);
+  render(<MovieList movieList={moviesList} />);
 
-  await userEvent.hover(screen.getByText(moviesList[0].name));
+  await userEvent.hover(screen.getByText(moviesList[0].title));
   await userEvent.click(screen.getByText(ButtonTexts.ContextMenu));
 };
 
 describe("MovieList", () => {
   it("should render movieListWrapper with correct number of MovieCard", () => {
-    render(<MovieList />);
+    render(<MovieList movieList={moviesList} />);
 
     const movieListWrapper = screen.queryByTestId("movie-list-wrapper");
 
@@ -28,7 +28,7 @@ describe("MovieList", () => {
   });
 
   it("should not show any dialogs initially", () => {
-    render(<MovieList />);
+    render(<MovieList movieList={moviesList} />);
 
     expect(screen.queryByText(DialogTitles.Edit)).not.toBeInTheDocument();
 
@@ -51,13 +51,13 @@ describe("MovieList", () => {
         expect(screen.getByText(DialogTitles.Edit)).toBeInTheDocument();
 
         expect(
-          screen.getByDisplayValue(moviesList[0].imageUrl),
+          screen.getByDisplayValue(moviesList[0].poster_path),
         ).toBeInTheDocument();
         expect(
-          screen.getByDisplayValue(moviesList[0].rating),
+          screen.getByDisplayValue(moviesList[0].vote_average),
         ).toBeInTheDocument();
         expect(
-          screen.getByDisplayValue(moviesList[0].description),
+          screen.getByDisplayValue(moviesList[0].overview),
         ).toBeInTheDocument();
 
         await userEvent.click(screen.getByText(ButtonTexts.Reset));

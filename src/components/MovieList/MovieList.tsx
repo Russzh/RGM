@@ -7,14 +7,14 @@ import {
   DialogConfirmTexts,
   DialogTitles,
 } from "@shared/components";
-import { moviesList } from "@shared/constants";
 import { MovieCard } from "./MovieCard/MovieCard";
 import { IMovieInfo } from "./MovieCard/MovieCard.types";
 import { AddEditMovieDialog } from "@components/AddEditMovieDialog/AddEditMovieDialog";
+import { IMovieListProps } from "@components/MovieList/MovieList.types";
 
 const { movieListWrapper } = styles;
 
-const MovieList: React.FC = () => {
+const MovieList: React.FC<IMovieListProps> = ({ movieList }) => {
   const [isConfirmDialogOpened, setIsConfirmDialogOpened] = useState(false);
   const [isEditDialogOpened, setIsEditDialogOpened] = useState(false);
   const [editedMovie, setEditedMovie] = useState<IMovieInfo | null>(null);
@@ -27,7 +27,7 @@ const MovieList: React.FC = () => {
   return (
     <>
       <div className={movieListWrapper} data-testid="movie-list-wrapper">
-        {moviesList.map((movie: IMovieInfo) => (
+        {movieList.map((movie: IMovieInfo) => (
           <MovieCard
             key={movie.id}
             movie={movie}

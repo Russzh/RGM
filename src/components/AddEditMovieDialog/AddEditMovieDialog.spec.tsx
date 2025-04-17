@@ -17,7 +17,7 @@ import {
 
 const mockOnCancel = jest.fn();
 const mockOnSubmit = jest.fn();
-const addEditModalSetup = (isEditModal: boolean = false): void => {
+const addEditModalSetup = (isEditModal = false): void => {
   render(
     <AddEditMovieDialog
       onCancel={mockOnCancel}
@@ -34,12 +34,12 @@ describe("AddEditMovieDialog", () => {
 
     expect(screen.getByText(DialogTitles.Edit)).toBeInTheDocument();
 
-    expect(screen.getByDisplayValue(moviesList[0].name)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(moviesList[0].title)).toBeInTheDocument();
     expect(
-      screen.getByDisplayValue(moviesList[0].releaseDate),
+      screen.getByDisplayValue(moviesList[0].release_date),
     ).toBeInTheDocument();
     expect(
-      screen.getByDisplayValue(formatMinutes(+moviesList[0].duration)),
+      screen.getByDisplayValue(formatMinutes(+moviesList[0].runtime)),
     ).toBeInTheDocument();
   });
 
@@ -153,6 +153,7 @@ describe("AddEditMovieDialog", () => {
   });
 
   it("should call onSubmit with correct data when Submit button is clicked", async () => {
+    jest.clearAllMocks();
     addEditModalSetup();
 
     await userEvent.type(
@@ -167,14 +168,14 @@ describe("AddEditMovieDialog", () => {
     await userEvent.click(screen.getByText(ButtonTexts.Submit));
 
     expect(mockOnSubmit).toHaveBeenCalledWith({
-      id: expect.any(String),
-      name: "The Matrix",
-      releaseDate: "",
-      imageUrl: "",
-      rating: "",
-      description: "",
+      id: expect.any(Number),
+      title: "The Matrix",
+      release_date: "",
+      poster_path: "",
+      vote_average: "",
+      overview: "",
       genres: [],
-      duration: "120",
+      runtime: 120,
     });
   });
 

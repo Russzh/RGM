@@ -1,17 +1,17 @@
 export interface IMovieInfo {
-  imageUrl: string;
-  name: string;
-  releaseDate: string;
+  poster_path: string;
+  title: string;
+  release_date: string;
   genres: Genre[];
-  id: string;
-  description: string;
-  rating: string;
-  duration: string;
+  id: number;
+  overview: string;
+  vote_average: string | number;
+  runtime: number;
 }
 
 export interface IMovieCardProps {
   movie: IMovieInfo;
-  onDeleteClick: (movieId: string) => void;
+  onDeleteClick: (movieId: number) => void;
   onEditClick: (movie: IMovieInfo) => void;
 }
 
