@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { SearchOutlined } from "@ant-design/icons";
+import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 
 import styles from "./MovieDetails.module.scss";
 import { formatMinutes } from "@shared/helpers";
-import { IMovieDetailsProps } from "@components/MovieDetails/MovieDetails.types";
-import { MovieContext } from "@context/MovieContext";
+import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
+import { RoutePaths } from "../../App.types";
 
 const {
   movieDetailsWrapper,
@@ -15,8 +16,9 @@ const {
   searchIcon,
 } = styles;
 
-const MovieDetails: React.FC<IMovieDetailsProps> = ({ selectedMovieData }) => {
-  const { setSelectedMovie } = useContext(MovieContext);
+const MovieDetails: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const {
     poster_path,
     title,
@@ -25,13 +27,18 @@ const MovieDetails: React.FC<IMovieDetailsProps> = ({ selectedMovieData }) => {
     runtime,
     overview,
     release_date,
-  } = selectedMovieData;
+  } = useLoaderData() as IMovieInfo;
 
   return (
     <div className={movieDetailsWrapper} data-testid="movie-details-wrapper">
       <SearchOutlined
         className={searchIcon}
-        onClick={() => setSelectedMovie(null)}
+        onClick={() =>
+          navigate({
+            pathname: RoutePaths.Home,
+            search: searchParams.toString(),
+          })
+        }
       />
       <img src={poster_path} alt={title} />
       <div className={movieDescriptionWrapper}>

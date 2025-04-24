@@ -1,21 +1,32 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 
 import { MovieCard } from "@components/MovieList/MovieCard/MovieCard";
 import { moviesList } from "@shared/constants";
-import { IMovieContextType, MovieContext } from "@context/MovieContext";
 import { ButtonTexts } from "@shared/components";
+import { RoutePaths } from "../../../App.types";
 
-describe("MovieCard", () => {
-  it("should render movieCardWrapper correctly", () => {
-    render(
+const mockNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockNavigate,
+}));
+
+const movieCardSetup = () =>
+  render(
+    <MemoryRouter>
       <MovieCard
         movie={moviesList[0]}
         onDeleteClick={jest.fn}
         onEditClick={jest.fn}
-      />,
-    );
+      />
+    </MemoryRouter>,
+  );
+describe("MovieCard", () => {
+  it("should render movieCardWrapper correctly", () => {
+    movieCardSetup();
 
     const movieCardWrapper = screen.queryByTestId("movie-card-wrapper");
     expect(movieCardWrapper).toBeInTheDocument();
@@ -26,39 +37,20 @@ describe("MovieCard", () => {
     expect(movieImage).toHaveAttribute("src", moviesList[0].poster_path);
   });
 
-  it("should call setSelectedMovie with correct value when MovieCard is clicked", async () => {
-    const mockSetSelectedMovie = jest.fn();
-
-    render(
-      <MovieContext.Provider
-        value={
-          {
-            setSelectedMovie: mockSetSelectedMovie,
-          } as unknown as IMovieContextType
-        }
-      >
-        <MovieCard
-          movie={moviesList[0]}
-          onDeleteClick={jest.fn}
-          onEditClick={jest.fn}
-        />
-      </MovieContext.Provider>,
-    );
+  it("should call navigate fn with correct object when MovieCard is clicked", async () => {
+    movieCardSetup();
 
     const movieCardWrapper = screen.queryByTestId("movie-card-wrapper");
     await userEvent.click(movieCardWrapper as HTMLElement);
 
-    expect(mockSetSelectedMovie).toHaveBeenCalledWith(moviesList[0]);
+    expect(mockNavigate).toHaveBeenCalledWith({
+      pathname: `${RoutePaths.Home}${moviesList[0].id}`,
+      search: "",
+    });
   });
 
   it("should handle mouse enter/leave and click events correctly", async () => {
-    render(
-      <MovieCard
-        movie={moviesList[0]}
-        onDeleteClick={jest.fn}
-        onEditClick={jest.fn}
-      />,
-    );
+    movieCardSetup();
 
     const movieNameElement = screen.getByText(moviesList[0].title);
     await userEvent.hover(movieNameElement);

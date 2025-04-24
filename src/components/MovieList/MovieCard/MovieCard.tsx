@@ -1,9 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import styles from "./MovieCard.module.scss";
 import { IMovieCardProps } from "./MovieCard.types";
 import { Button, ButtonTexts } from "@shared/components";
-import { MovieContext } from "@context/MovieContext";
+import { RoutePaths } from "../../../App.types";
+import { commonImgUrl } from "@shared/constants";
 
 const {
   movieCardWrapper,
@@ -23,8 +25,11 @@ const MovieCard: React.FC<IMovieCardProps> = ({
 }) => {
   const [isContextMenuOpen, setIsContextMenuOpen] = React.useState(false);
   const [isContextMenuVisible, setIsContextMenuVisible] = React.useState(false);
+  const [isImgUrlHasError, setIsImgUrlHasError] = React.useState(false);
 
-  const { setSelectedMovie } = useContext(MovieContext);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const { poster_path, genres, title, release_date, id } = movie;
 
   const handleContextMenuToggle = (event: React.MouseEvent): void => {
@@ -44,12 +49,22 @@ const MovieCard: React.FC<IMovieCardProps> = ({
   return (
     <div
       className={movieCardWrapper}
-      onClick={() => setSelectedMovie(movie)}
+      onClick={() =>
+        navigate({
+          pathname: `${RoutePaths.Home}${movie.id}`,
+          search: searchParams.toString(),
+        })
+      }
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       data-testid="movie-card-wrapper"
     >
-      <img src={poster_path} alt={title} className={movieImage} />
+      <img
+        src={isImgUrlHasError || !poster_path ? commonImgUrl : poster_path}
+        alt={title}
+        className={movieImage}
+        onError={() => setIsImgUrlHasError(true)}
+      />
       <div className={movieNameWrapper}>
         <h5 className={movieName}>{title}</h5>
         <span className={releaseYear}>

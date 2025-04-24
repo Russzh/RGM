@@ -1,39 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 
-import {
-  SearchForm,
-  GenreSelect,
-  MovieList,
-  MovieDetails,
-  SortControl,
-  AddEditMovieDialog,
-} from "../../components";
-import { MovieContext } from "@context/MovieContext";
+import { GenreSelect, MovieList, SortControl } from "../../components";
 import { SortByOptions } from "@components/SortControl/SortControl.types";
-import { Button, ButtonTexts, Header } from "@shared/components";
 import styles from "./MovieListPage.module.scss";
 import { genresList } from "@shared/constants";
 import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
-import { fetchMovies } from "../../api/fetchData";
+import { getMovies } from "../../api/fetchData";
+import { RoutePaths } from "../../App.types";
 
-const { addMovieButton, genreSortControls, mainContent, moviesNumber } = styles;
+const { genreSortControls, mainContent, moviesNumber } = styles;
 
 const MovieListPage: React.FC = () => {
-  const [searchFormQuery, setSearchFormQuery] = useState<string>("");
-  const [activeGenre, setActiveGenre] = useState<string>(genresList[0].name);
-  const [sortCriterion, setSortCriterion] = useState<string>(
-    Object.keys(SortByOptions)[1],
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
   const [movieList, setMovieList] = useState<IMovieInfo[]>([]);
-  const [isAddMovieModalOpened, setIsAddMovieModalOpened] =
-    useState<boolean>(false);
-  const { selectedMovie, setSelectedMovie } = useContext(MovieContext);
+  const navigate = useNavigate();
+
+  const searchFormQuery = searchParams.get("query") || "";
+  const activeGenre = searchParams.get("genre") || genresList[0].name;
+  const sortCriterion =
+    searchParams.get("sort") || Object.keys(SortByOptions)[1];
 
   const { data: responseMovies } = useQuery({
     queryKey: ["responseMovies", searchFormQuery, sortCriterion, activeGenre],
     queryFn: () =>
-      fetchMovies({
+      getMovies({
         searchBy: "title",
         search: searchFormQuery,
         sortBy: sortCriterion,
@@ -46,42 +38,40 @@ const MovieListPage: React.FC = () => {
   useEffect(() => {
     if (responseMovies) {
       setMovieList(responseMovies.data);
-      setSelectedMovie(null);
     }
-  }, [responseMovies, setSelectedMovie]);
+  }, [responseMovies]);
 
-  const handleAddMovie = (moviePayload: IMovieInfo): void => {
-    console.log("New movie added:", moviePayload);
-    setIsAddMovieModalOpened(false);
+  const updateSearchParams = (params: Record<string, string>) => {
+    navigate({
+      pathname: RoutePaths.Home,
+      search: searchParams.toString(),
+    });
+    setSearchParams((currentParams) => {
+      const [key, value] = Object.entries(params)[0];
+      const newParams = new URLSearchParams(currentParams);
+      newParams.set(key, value);
+      return newParams;
+    });
   };
 
   return (
     <>
-      {selectedMovie ? (
-        <MovieDetails selectedMovieData={selectedMovie} />
-      ) : (
-        <Header>
-          <SearchForm onSearchClick={(query) => setSearchFormQuery(query)} />
-          <Button
-            className={addMovieButton}
-            buttonText={ButtonTexts.AddMovie}
-            onClick={() => setIsAddMovieModalOpened(true)}
-          />
-        </Header>
-      )}
+      <Outlet context={{ updateSearchParams, searchFormQuery }} />
 
       <main className={mainContent}>
         <section className={genreSortControls}>
           <GenreSelect
             activeGenre={activeGenre}
             genresList={genresList}
-            onGenreSelect={(selectedGenre) => setActiveGenre(selectedGenre)}
+            onGenreSelect={(selectedGenre) => {
+              updateSearchParams({ genre: selectedGenre });
+            }}
           />
           <SortControl
             currentSelection={sortCriterion}
-            onSelectionChange={(selectedOption) =>
-              setSortCriterion(selectedOption)
-            }
+            onSelectionChange={(selectedOption) => {
+              updateSearchParams({ sort: selectedOption });
+            }}
           />
         </section>
 
@@ -92,13 +82,6 @@ const MovieListPage: React.FC = () => {
         )}
         {movieList && <MovieList movieList={movieList} />}
       </main>
-
-      {isAddMovieModalOpened && (
-        <AddEditMovieDialog
-          onSubmit={handleAddMovie}
-          onCancel={() => setIsAddMovieModalOpened(false)}
-        />
-      )}
     </>
   );
 };
