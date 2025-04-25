@@ -23,7 +23,7 @@ const SearchForm: React.FC<ISearchFormProps> = ({ initialSearchQuery }) => {
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    updateSearchParams({ query: searchQuery });
+    updateSearchParams({ query: searchQuery, page: "1" });
   };
 
   return (

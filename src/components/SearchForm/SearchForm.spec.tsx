@@ -60,6 +60,7 @@ describe("SearchForm", () => {
     expect(mockUpdateSearchParams).toHaveBeenCalledTimes(1);
     expect(mockUpdateSearchParams).toHaveBeenCalledWith({
       query: "Initial Query",
+      page: "1",
     });
   });
 

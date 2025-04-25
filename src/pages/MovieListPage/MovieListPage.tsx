@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
+import { Pagination } from "antd";
 
 import { GenreSelect, MovieList, SortControl } from "../../components";
 import { SortByOptions } from "@components/SortControl/SortControl.types";
@@ -22,9 +23,18 @@ const MovieListPage: React.FC = () => {
   const activeGenre = searchParams.get("genre") || genresList[0].name;
   const sortCriterion =
     searchParams.get("sort") || Object.keys(SortByOptions)[1];
+  let currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const currentPageSize = parseInt(searchParams.get("pageSize") || "10", 10);
 
   const { data: responseMovies } = useQuery({
-    queryKey: ["responseMovies", searchFormQuery, sortCriterion, activeGenre],
+    queryKey: [
+      "responseMovies",
+      searchFormQuery,
+      sortCriterion,
+      activeGenre,
+      currentPage,
+      currentPageSize,
+    ],
     queryFn: () =>
       getMovies({
         searchBy: "title",
@@ -32,9 +42,17 @@ const MovieListPage: React.FC = () => {
         sortBy: sortCriterion,
         sortOrder: "asc",
         filter: activeGenre === genresList[0].name ? "" : activeGenre,
-        limit: -1,
+        limit: currentPageSize,
+        offset: (currentPage - 1) * currentPageSize,
       }),
   });
+
+  const maxPossibleCurrentPage: number = responseMovies
+    ? Math.ceil(responseMovies?.totalAmount / currentPageSize)
+    : 1;
+  if (currentPage > maxPossibleCurrentPage) {
+    currentPage = maxPossibleCurrentPage;
+  }
 
   useEffect(() => {
     if (responseMovies) {
@@ -48,11 +66,22 @@ const MovieListPage: React.FC = () => {
       search: searchParams.toString(),
     });
     setSearchParams((currentParams) => {
-      const [key, value] = Object.entries(params)[0];
       const newParams = new URLSearchParams(currentParams);
-      value ? newParams.set(key, value) : newParams.delete(key);
+      Object.entries(params).forEach(([key, value]) => {
+        value ? newParams.set(key, value) : newParams.delete(key);
+      });
       return newParams;
     });
+  };
+
+  const handlePaginationChange = (pageNumber: number, pageSize: number) => {
+    const isPageSizeChanged = pageSize !== currentPageSize;
+
+    updateSearchParams(
+      isPageSizeChanged
+        ? { pageSize: pageSize.toString(), page: "1" }
+        : { page: pageNumber.toString() },
+    );
   };
 
   return (
@@ -65,25 +94,35 @@ const MovieListPage: React.FC = () => {
             activeGenre={activeGenre}
             genresList={genresList}
             onGenreSelect={(selectedGenre) => {
-              updateSearchParams({ genre: selectedGenre });
+              updateSearchParams({ genre: selectedGenre, page: "1" });
             }}
           />
           <SortControl
             currentSelection={sortCriterion}
             onSelectionChange={(selectedOption) => {
-              updateSearchParams({ sort: selectedOption });
+              updateSearchParams({ sort: selectedOption, page: "1" });
             }}
           />
         </section>
 
         <section className={moviesNumberContainer}>
           <p className={moviesNumber}>
-            {responseMovies ? responseMovies.data.length : "Loading..."}
+            {responseMovies ? responseMovies.totalAmount : "Loading..."}
           </p>{" "}
           movies found
         </section>
 
         {movieList && <MovieList movieList={movieList} />}
+
+        {!!responseMovies?.totalAmount && (
+          <Pagination
+            current={currentPage}
+            total={responseMovies.totalAmount}
+            pageSize={currentPageSize}
+            showSizeChanger
+            onChange={handlePaginationChange}
+          />
+        )}
       </main>
     </>
   );

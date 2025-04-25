@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import styles from "./MovieCard.module.scss";
@@ -23,9 +23,9 @@ const MovieCard: React.FC<IMovieCardProps> = ({
   onDeleteClick,
   onEditClick,
 }) => {
-  const [isContextMenuOpen, setIsContextMenuOpen] = React.useState(false);
-  const [isContextMenuVisible, setIsContextMenuVisible] = React.useState(false);
-  const [isImgUrlHasError, setIsImgUrlHasError] = React.useState(false);
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+  const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
+  const [isImgUrlHasError, setIsImgUrlHasError] = useState(false);
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

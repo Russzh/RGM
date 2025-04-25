@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { useLoaderData, useNavigate, useSearchParams } from "react-router";
 
@@ -18,7 +18,7 @@ const {
 } = styles;
 
 const MovieDetails: React.FC = () => {
-  const [isImgUrlHasError, setIsImgUrlHasError] = React.useState(false);
+  const [isImgUrlHasError, setIsImgUrlHasError] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const {
