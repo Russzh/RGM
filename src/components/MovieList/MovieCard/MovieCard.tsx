@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 
 import styles from "./MovieCard.module.scss";
 import { IMovieCardProps } from "./MovieCard.types";

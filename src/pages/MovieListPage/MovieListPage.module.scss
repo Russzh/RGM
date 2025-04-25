@@ -5,10 +5,16 @@
   background-color: #7f7f7f;
   border-top: 10px solid lightgray;
 
-  .moviesNumber {
-    font-weight: bold;
-    color: white;
-    margin-top: 10px;
+  .moviesNumberContainer {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+
+    .moviesNumber {
+      font-weight: bold;
+      color: white;
+      margin-top: 10px;
+    }
   }
 
   .genreSortControls {

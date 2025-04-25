@@ -1,19 +1,26 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useOutletContext } from "react-router";
 
 import { SearchForm } from "./SearchForm";
 import { ButtonTexts, InputPlaceholders } from "@shared/components";
 
 const mockUpdateSearchParams = jest.fn();
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useOutletContext: jest.fn(() => ({
-    updateSearchParams: mockUpdateSearchParams,
-  })),
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
+  useOutletContext: jest.fn(),
 }));
 
 describe("SearchForm", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    (useOutletContext as jest.Mock).mockReturnValue({
+      updateSearchParams: mockUpdateSearchParams,
+    });
+  });
+
   it("should be rendered with initial search query", () => {
     render(<SearchForm initialSearchQuery="Initial Query" />);
     const input = screen.getByPlaceholderText(

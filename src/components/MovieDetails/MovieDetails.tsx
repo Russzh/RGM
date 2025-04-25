@@ -1,11 +1,12 @@
 import React from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useSearchParams } from "react-router";
 
 import styles from "./MovieDetails.module.scss";
 import { formatMinutes } from "@shared/helpers";
 import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
 import { RoutePaths } from "../../App.types";
+import { commonImgUrl } from "@shared/constants";
 
 const {
   movieDetailsWrapper,
@@ -17,6 +18,7 @@ const {
 } = styles;
 
 const MovieDetails: React.FC = () => {
+  const [isImgUrlHasError, setIsImgUrlHasError] = React.useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const {
@@ -40,7 +42,11 @@ const MovieDetails: React.FC = () => {
           })
         }
       />
-      <img src={poster_path} alt={title} />
+      <img
+        src={isImgUrlHasError || !poster_path ? commonImgUrl : poster_path}
+        alt={title}
+        onError={() => setIsImgUrlHasError(true)}
+      />
       <div className={movieDescriptionWrapper}>
         <div className={movieNameWrapper}>
           <h3>{title.toUpperCase()}</h3>

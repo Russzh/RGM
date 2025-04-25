@@ -10,7 +10,8 @@ import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
 import { getMovies } from "../../api/fetchData";
 import { RoutePaths } from "../../App.types";
 
-const { genreSortControls, mainContent, moviesNumber } = styles;
+const { genreSortControls, mainContent, moviesNumber, moviesNumberContainer } =
+  styles;
 
 const MovieListPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -49,7 +50,7 @@ const MovieListPage: React.FC = () => {
     setSearchParams((currentParams) => {
       const [key, value] = Object.entries(params)[0];
       const newParams = new URLSearchParams(currentParams);
-      newParams.set(key, value);
+      value ? newParams.set(key, value) : newParams.delete(key);
       return newParams;
     });
   };
@@ -75,11 +76,13 @@ const MovieListPage: React.FC = () => {
           />
         </section>
 
-        {responseMovies && (
-          <p
-            className={moviesNumber}
-          >{`${responseMovies.data.length} movies found`}</p>
-        )}
+        <section className={moviesNumberContainer}>
+          <p className={moviesNumber}>
+            {responseMovies ? responseMovies.data.length : "Loading..."}
+          </p>{" "}
+          movies found
+        </section>
+
         {movieList && <MovieList movieList={movieList} />}
       </main>
     </>

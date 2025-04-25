@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLoaderData } from "react-router";
 
 import { MovieDetails } from "./MovieDetails";
 import { moviesList } from "@shared/constants";
@@ -20,12 +20,18 @@ const mockMovie: IMovieInfo = {
   vote_average: 8.9,
   runtime: 135,
 };
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useLoaderData: jest.fn(() => mockMovie),
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
+  useLoaderData: jest.fn(),
 }));
 
 describe("MovieDetails", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    (useLoaderData as jest.Mock).mockImplementation(() => mockMovie);
+  });
+
   it("should be rendered correctly when a movie is selected", () => {
     render(
       <MemoryRouter>

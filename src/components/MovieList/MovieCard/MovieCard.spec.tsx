@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 
 import { MovieCard } from "@components/MovieList/MovieCard/MovieCard";
 import { moviesList } from "@shared/constants";
@@ -9,8 +9,8 @@ import { ButtonTexts } from "@shared/components";
 import { RoutePaths } from "../../../App.types";
 
 const mockNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
   useNavigate: () => mockNavigate,
 }));
 
