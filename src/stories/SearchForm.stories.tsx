@@ -8,10 +8,6 @@ const meta: Meta<typeof SearchForm> = {
   component: SearchForm,
   tags: ["autodocs"],
   argTypes: {
-    onSearchClick: {
-      description: "Callback function for search click",
-      action: "Search button clicked with value",
-    },
     initialSearchQuery: {
       control: { type: "text" },
       description: "Initial search query",
@@ -30,15 +26,7 @@ export const SearchFormComponent: Story = {
       setKey((prevKey) => prevKey + 1);
     }, [args.initialSearchQuery]);
 
-    return (
-      <SearchForm
-        key={key}
-        {...args}
-        onSearchClick={(query) => {
-          args.onSearchClick(query);
-        }}
-      />
-    );
+    return <SearchForm key={key} {...args} />;
   },
   args: {
     initialSearchQuery: "INITIAL QUERY",

@@ -7,6 +7,7 @@ export interface FetchMoviesParams {
   sortOrder: string;
   filter: string | undefined;
   limit: number;
+  offset: number;
 }
 
 export interface FetchMoviesResponse {

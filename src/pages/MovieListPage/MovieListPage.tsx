@@ -1,104 +1,129 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
+import { Pagination } from "antd";
 
-import {
-  SearchForm,
-  GenreSelect,
-  MovieList,
-  MovieDetails,
-  SortControl,
-  AddEditMovieDialog,
-} from "../../components";
-import { MovieContext } from "@context/MovieContext";
+import { GenreSelect, MovieList, SortControl } from "../../components";
 import { SortByOptions } from "@components/SortControl/SortControl.types";
-import { Button, ButtonTexts, Header } from "@shared/components";
 import styles from "./MovieListPage.module.scss";
 import { genresList } from "@shared/constants";
 import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
-import { fetchMovies } from "../../api/fetchData";
+import { getMovies } from "../../api/fetchData";
+import { RoutePaths } from "../../App.types";
 
-const { addMovieButton, genreSortControls, mainContent, moviesNumber } = styles;
+const { genreSortControls, mainContent, moviesNumber, moviesNumberContainer } =
+  styles;
 
 const MovieListPage: React.FC = () => {
-  const [searchFormQuery, setSearchFormQuery] = useState<string>("");
-  const [activeGenre, setActiveGenre] = useState<string>(genresList[0].name);
-  const [sortCriterion, setSortCriterion] = useState<string>(
-    Object.keys(SortByOptions)[1],
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
   const [movieList, setMovieList] = useState<IMovieInfo[]>([]);
-  const [isAddMovieModalOpened, setIsAddMovieModalOpened] =
-    useState<boolean>(false);
-  const { selectedMovie, setSelectedMovie } = useContext(MovieContext);
+  const navigate = useNavigate();
+
+  const searchFormQuery = searchParams.get("query") || "";
+  const activeGenre = searchParams.get("genre") || genresList[0].name;
+  const sortCriterion =
+    searchParams.get("sort") || Object.keys(SortByOptions)[1];
+  let currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const currentPageSize = parseInt(searchParams.get("pageSize") || "10", 10);
 
   const { data: responseMovies } = useQuery({
-    queryKey: ["responseMovies", searchFormQuery, sortCriterion, activeGenre],
+    queryKey: [
+      "responseMovies",
+      searchFormQuery,
+      sortCriterion,
+      activeGenre,
+      currentPage,
+      currentPageSize,
+    ],
     queryFn: () =>
-      fetchMovies({
+      getMovies({
         searchBy: "title",
         search: searchFormQuery,
         sortBy: sortCriterion,
         sortOrder: "asc",
         filter: activeGenre === genresList[0].name ? "" : activeGenre,
-        limit: -1,
+        limit: currentPageSize,
+        offset: (currentPage - 1) * currentPageSize,
       }),
   });
+
+  const maxPossibleCurrentPage: number = responseMovies
+    ? Math.ceil(responseMovies?.totalAmount / currentPageSize)
+    : 1;
+  if (currentPage > maxPossibleCurrentPage) {
+    currentPage = maxPossibleCurrentPage;
+  }
 
   useEffect(() => {
     if (responseMovies) {
       setMovieList(responseMovies.data);
-      setSelectedMovie(null);
     }
-  }, [responseMovies, setSelectedMovie]);
+  }, [responseMovies]);
 
-  const handleAddMovie = (moviePayload: IMovieInfo): void => {
-    console.log("New movie added:", moviePayload);
-    setIsAddMovieModalOpened(false);
+  const updateSearchParams = (params: Record<string, string>) => {
+    navigate({
+      pathname: RoutePaths.Home,
+      search: searchParams.toString(),
+    });
+    setSearchParams((currentParams) => {
+      const newParams = new URLSearchParams(currentParams);
+      Object.entries(params).forEach(([key, value]) => {
+        value ? newParams.set(key, value) : newParams.delete(key);
+      });
+      return newParams;
+    });
+  };
+
+  const handlePaginationChange = (pageNumber: number, pageSize: number) => {
+    const isPageSizeChanged = pageSize !== currentPageSize;
+
+    updateSearchParams(
+      isPageSizeChanged
+        ? { pageSize: pageSize.toString(), page: "1" }
+        : { page: pageNumber.toString() },
+    );
   };
 
   return (
     <>
-      {selectedMovie ? (
-        <MovieDetails selectedMovieData={selectedMovie} />
-      ) : (
-        <Header>
-          <SearchForm onSearchClick={(query) => setSearchFormQuery(query)} />
-          <Button
-            className={addMovieButton}
-            buttonText={ButtonTexts.AddMovie}
-            onClick={() => setIsAddMovieModalOpened(true)}
-          />
-        </Header>
-      )}
+      <Outlet context={{ updateSearchParams, searchFormQuery }} />
 
       <main className={mainContent}>
         <section className={genreSortControls}>
           <GenreSelect
             activeGenre={activeGenre}
             genresList={genresList}
-            onGenreSelect={(selectedGenre) => setActiveGenre(selectedGenre)}
+            onGenreSelect={(selectedGenre) => {
+              updateSearchParams({ genre: selectedGenre, page: "1" });
+            }}
           />
           <SortControl
             currentSelection={sortCriterion}
-            onSelectionChange={(selectedOption) =>
-              setSortCriterion(selectedOption)
-            }
+            onSelectionChange={(selectedOption) => {
+              updateSearchParams({ sort: selectedOption, page: "1" });
+            }}
           />
         </section>
 
-        {responseMovies && (
-          <p
-            className={moviesNumber}
-          >{`${responseMovies.data.length} movies found`}</p>
-        )}
-        {movieList && <MovieList movieList={movieList} />}
-      </main>
+        <section className={moviesNumberContainer}>
+          <p className={moviesNumber}>
+            {responseMovies ? responseMovies.totalAmount : "Loading..."}
+          </p>{" "}
+          movies found
+        </section>
 
-      {isAddMovieModalOpened && (
-        <AddEditMovieDialog
-          onSubmit={handleAddMovie}
-          onCancel={() => setIsAddMovieModalOpened(false)}
-        />
-      )}
+        {movieList && <MovieList movieList={movieList} />}
+
+        {!!responseMovies?.totalAmount && (
+          <Pagination
+            current={currentPage}
+            total={responseMovies.totalAmount}
+            pageSize={currentPageSize}
+            showSizeChanger
+            onChange={handlePaginationChange}
+          />
+        )}
+      </main>
     </>
   );
 };

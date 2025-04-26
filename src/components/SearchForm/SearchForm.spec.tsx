@@ -1,18 +1,28 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useOutletContext } from "react-router";
 
 import { SearchForm } from "./SearchForm";
 import { ButtonTexts, InputPlaceholders } from "@shared/components";
 
+const mockUpdateSearchParams = jest.fn();
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
+  useOutletContext: jest.fn(),
+}));
+
 describe("SearchForm", () => {
-  it("renders with initial search query", () => {
-    render(
-      <SearchForm
-        initialSearchQuery="Initial Query"
-        onSearchClick={jest.fn()}
-      />,
-    );
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    (useOutletContext as jest.Mock).mockReturnValue({
+      updateSearchParams: mockUpdateSearchParams,
+    });
+  });
+
+  it("should be rendered with initial search query", () => {
+    render(<SearchForm initialSearchQuery="Initial Query" />);
     const input = screen.getByPlaceholderText(
       InputPlaceholders.WhatDoYouWantToWatch,
     ) as HTMLInputElement;
@@ -20,10 +30,8 @@ describe("SearchForm", () => {
     expect(input.value).toBe("Initial Query");
   });
 
-  it("initializes searchQuery with an empty string if initialSearchQuery is not provided", () => {
-    render(
-      <SearchForm initialSearchQuery={undefined} onSearchClick={jest.fn()} />,
-    );
+  it("should initialize searchQuery with an empty string if initialSearchQuery is not provided", () => {
+    render(<SearchForm initialSearchQuery={undefined} />);
 
     const input = screen.getByPlaceholderText(
       InputPlaceholders.WhatDoYouWantToWatch,
@@ -32,8 +40,8 @@ describe("SearchForm", () => {
     expect(input.value).toBe("");
   });
 
-  it("updates search query on input change", async () => {
-    render(<SearchForm initialSearchQuery="" onSearchClick={jest.fn()} />);
+  it("should update search query on input change", async () => {
+    render(<SearchForm initialSearchQuery="" />);
     const input = screen.getByPlaceholderText(
       InputPlaceholders.WhatDoYouWantToWatch,
     ) as HTMLInputElement;
@@ -43,24 +51,21 @@ describe("SearchForm", () => {
     expect(input.value).toBe("New Query");
   });
 
-  it("calls onSearchClick with the correct query when form is submitted", async () => {
-    const mockOnSearchClick = jest.fn();
-    render(
-      <SearchForm
-        initialSearchQuery="Initial Query"
-        onSearchClick={mockOnSearchClick}
-      />,
-    );
+  it("should call updateSearchParams with the correct query when form is submitted", async () => {
+    render(<SearchForm initialSearchQuery="Initial Query" />);
     const button = screen.getByText(ButtonTexts.Search.toUpperCase());
 
     await userEvent.click(button);
 
-    expect(mockOnSearchClick).toHaveBeenCalledTimes(1);
-    expect(mockOnSearchClick).toHaveBeenCalledWith("Initial Query");
+    expect(mockUpdateSearchParams).toHaveBeenCalledTimes(1);
+    expect(mockUpdateSearchParams).toHaveBeenCalledWith({
+      query: "Initial Query",
+      page: "1",
+    });
   });
 
-  it("renders the submit button with correct text and type", () => {
-    render(<SearchForm initialSearchQuery="" onSearchClick={jest.fn()} />);
+  it("should render the submit button with correct text and type", () => {
+    render(<SearchForm initialSearchQuery="" />);
     const button = screen.getByText(ButtonTexts.Search.toUpperCase());
 
     expect(button).toBeInTheDocument();

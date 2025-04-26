@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useOutletContext } from "react-router";
 
 import styles from "./SearchForm.module.scss";
 import {
@@ -11,15 +12,18 @@ import { ISearchFormProps } from "./SearchForm.types";
 
 const { searchFormContainer, searchButton } = styles;
 
-const SearchForm: React.FC<ISearchFormProps> = ({
-  initialSearchQuery,
-  onSearchClick,
-}) => {
-  const [searchQuery, setSearchQuery] = useState(initialSearchQuery ?? "");
+const SearchForm: React.FC<ISearchFormProps> = ({ initialSearchQuery }) => {
+  const { updateSearchParams, searchFormQuery } = useOutletContext<{
+    updateSearchParams: (params: Record<string, string>) => void;
+    searchFormQuery: string;
+  }>();
+  const [searchQuery, setSearchQuery] = useState(
+    initialSearchQuery || searchFormQuery || "",
+  );
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    onSearchClick(searchQuery);
+    updateSearchParams({ query: searchQuery, page: "1" });
   };
 
   return (

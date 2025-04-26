@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router";
 
 import { MovieList } from "@components/MovieList/MovieList";
 import {
@@ -11,7 +12,11 @@ import {
 import { moviesList } from "@shared/constants";
 
 const setupToSeeContextMenuBtns = async (): Promise<void> => {
-  render(<MovieList movieList={moviesList} />);
+  render(
+    <MemoryRouter>
+      <MovieList movieList={moviesList} />
+    </MemoryRouter>,
+  );
 
   await userEvent.hover(screen.getByText(moviesList[0].title));
   await userEvent.click(screen.getByText(ButtonTexts.ContextMenu));
@@ -19,7 +24,11 @@ const setupToSeeContextMenuBtns = async (): Promise<void> => {
 
 describe("MovieList", () => {
   it("should render movieListWrapper with correct number of MovieCard", () => {
-    render(<MovieList movieList={moviesList} />);
+    render(
+      <MemoryRouter>
+        <MovieList movieList={moviesList} />
+      </MemoryRouter>,
+    );
 
     const movieListWrapper = screen.queryByTestId("movie-list-wrapper");
 
@@ -28,7 +37,11 @@ describe("MovieList", () => {
   });
 
   it("should not show any dialogs initially", () => {
-    render(<MovieList movieList={moviesList} />);
+    render(
+      <MemoryRouter>
+        <MovieList movieList={moviesList} />
+      </MemoryRouter>,
+    );
 
     expect(screen.queryByText(DialogTitles.Edit)).not.toBeInTheDocument();
 

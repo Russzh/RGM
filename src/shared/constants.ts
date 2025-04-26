@@ -27,6 +27,8 @@ export const genresList: IGenreItem[] = [
   },
 ];
 
+export const commonImgUrl = "/movie-images/bohemian-rhapsody.png";
+
 export const moviesList: IMovieInfo[] = [
   {
     poster_path: "/movie-images/pulp-fiction.png",
@@ -40,7 +42,7 @@ export const moviesList: IMovieInfo[] = [
     runtime: 135,
   },
   {
-    poster_path: "/movie-images/bohemian-rhapsody.png",
+    poster_path: commonImgUrl,
     title: "Bohemian Rhapsody",
     release_date: "2002-11-11",
     genres: [Genre.Drama, Genre.Biography, Genre.Music],
