@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useOutletContext } from "react-router";
+import { useOutletContext, Outlet } from "react-router";
 
 import styles from "./SearchForm.module.scss";
 import {
@@ -27,22 +27,26 @@ const SearchForm: React.FC<ISearchFormProps> = ({ initialSearchQuery }) => {
   };
 
   return (
-    <form className={searchFormContainer} onSubmit={handleFormSubmit}>
-      <Input
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setSearchQuery(e.target.value)
-        }
-        currentValue={searchQuery}
-        inputId="search-form"
-        invalid={false}
-        inputPlaceholder={InputPlaceholders.WhatDoYouWantToWatch}
-      />
-      <Button
-        buttonText={ButtonTexts.Search}
-        type="submit"
-        className={searchButton}
-      />
-    </form>
+    <>
+      <form className={searchFormContainer} onSubmit={handleFormSubmit}>
+        <Input
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSearchQuery(e.target.value)
+          }
+          currentValue={searchQuery}
+          inputId="search-form"
+          invalid={false}
+          inputPlaceholder={InputPlaceholders.WhatDoYouWantToWatch}
+        />
+        <Button
+          buttonText={ButtonTexts.Search}
+          type="submit"
+          className={searchButton}
+        />
+      </form>
+
+      <Outlet />
+    </>
   );
 };
 

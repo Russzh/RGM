@@ -70,7 +70,6 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
 
   const handleSubmit = () => {
     const movieData: IMovieInfo = {
-      id: isEditModal ? editedMovieData.id : new Date().getMilliseconds(),
       title: formState.title,
       release_date: formState.release_date || "",
       poster_path: formState.poster_path,

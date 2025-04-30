@@ -97,7 +97,7 @@ const MovieCard: React.FC<IMovieCardProps> = ({
                 buttonText={ButtonTexts.Delete}
                 onClick={(event: React.MouseEvent) => {
                   event.stopPropagation();
-                  onDeleteClick(id);
+                  onDeleteClick(id as number);
                 }}
               />
             </div>
