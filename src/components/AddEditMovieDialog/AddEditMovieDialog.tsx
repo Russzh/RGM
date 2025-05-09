@@ -79,6 +79,10 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
       runtime: formState.runtime,
     };
 
+    if (isEditModal) {
+      movieData.id = formState.id;
+    }
+
     onSubmit(movieData);
   };
 

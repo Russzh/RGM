@@ -1,4 +1,5 @@
 export enum RoutePaths {
   "Home" = "/",
-  "AddMovie" = "/new",
+  "AddMovie" = "new",
+  "EditMovie" = "edit",
 }

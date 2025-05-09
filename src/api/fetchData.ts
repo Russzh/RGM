@@ -32,3 +32,11 @@ export const createMovie = async (
 
   return response.data;
 };
+
+export const updateMovie = async (
+  moviePayload: IMovieInfo,
+): Promise<IMovieInfo> => {
+  const response = await axios.put(`${baseURL}/movies`, moviePayload);
+
+  return response.data;
+};

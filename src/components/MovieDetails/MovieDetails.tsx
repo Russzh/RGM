@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { useLoaderData, useNavigate, useSearchParams } from "react-router";
+import {
+  Outlet,
+  useLoaderData,
+  useNavigate,
+  useSearchParams,
+} from "react-router";
 
 import styles from "./MovieDetails.module.scss";
 import { formatMinutes } from "@shared/helpers";
@@ -19,8 +24,12 @@ const {
 
 const MovieDetails: React.FC = () => {
   const [isImgUrlHasError, setIsImgUrlHasError] = useState(false);
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
+  const selectedMovie = useLoaderData() as IMovieInfo;
+
   const {
     poster_path,
     title,
@@ -29,7 +38,11 @@ const MovieDetails: React.FC = () => {
     runtime,
     overview,
     release_date,
-  } = useLoaderData() as IMovieInfo;
+  } = selectedMovie;
+
+  useEffect(() => {
+    setIsImgUrlHasError(false);
+  }, [selectedMovie]);
 
   return (
     <div className={movieDetailsWrapper} data-testid="movie-details-wrapper">
@@ -59,6 +72,8 @@ const MovieDetails: React.FC = () => {
         </div>
         <span>{overview}</span>
       </div>
+
+      <Outlet context={selectedMovie} />
     </div>
   );
 };

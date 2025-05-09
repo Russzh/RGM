@@ -22,7 +22,7 @@ const Header: React.FC<IHeaderProps> = ({ children, buttonText }) => {
             buttonText={buttonText}
             onClick={() =>
               navigate({
-                pathname: RoutePaths.AddMovie,
+                pathname: `${RoutePaths.Home}${RoutePaths.AddMovie}`,
                 search: searchParams.toString(),
               })
             }

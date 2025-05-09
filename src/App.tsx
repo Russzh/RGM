@@ -11,6 +11,7 @@ import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
 import { RoutePaths } from "./App.types";
 import { getMovieById } from "./api/fetchData";
 import { AddMovieForm } from "@components/AddMovieForm/AddMovieForm";
+import { EditMovieForm } from "@components/EditMovieForm/EditMovieForm";
 
 const { appContainer } = styles;
 
@@ -41,6 +42,12 @@ const App = () => {
           element: <MovieDetails />,
           loader: async ({ params }): Promise<IMovieInfo> =>
             getMovieById(params.movieId as string),
+          children: [
+            {
+              path: RoutePaths.EditMovie,
+              element: <EditMovieForm />,
+            },
+          ],
         },
       ],
     },

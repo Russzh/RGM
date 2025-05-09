@@ -27,7 +27,7 @@ export const genresList: IGenreItem[] = [
   },
 ];
 
-export const commonImgUrl = "/movie-images/bohemian-rhapsody.png";
+export const commonImgUrl = "/errorDefaultMovieImg.png";
 
 export const moviesList: IMovieInfo[] = [
   {
