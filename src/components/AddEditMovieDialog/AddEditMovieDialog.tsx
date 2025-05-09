@@ -1,6 +1,7 @@
 import React, { useReducer, useState } from "react";
 import { Checkbox, DatePicker, Select } from "antd";
 import dayjs from "dayjs";
+import { useNavigate, useOutletContext, useSearchParams } from "react-router";
 
 import styles from "./AddEditMovieDialog.module.scss";
 import {
@@ -21,17 +22,18 @@ import {
   IAddEditMovieDialogProps,
 } from "./AddEditMovieDialog.types";
 import { formatMinutes } from "@shared/helpers";
+import { createMovie, updateMovie } from "../../api/fetchData";
+import { RoutePaths } from "../../App.types";
 
 const { formContainer, formRow, fieldContainerWithLabel, datePickerAntd } =
   styles;
 
 const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
-  onCancel,
-  onSubmit,
   isEditModal = false,
-  movieData,
 }) => {
-  const editedMovieData = movieData as IMovieInfo;
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editedMovieData = useOutletContext<IMovieInfo>();
 
   const [runtimeDisplayValue, setRuntimeDisplayValue] = useState<string>(
     isEditModal ? formatMinutes(editedMovieData.runtime) : "",
@@ -68,8 +70,8 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
   };
   const [formState, dispatch] = useReducer(formReducer, initialState);
 
-  const handleSubmit = () => {
-    const movieData: IMovieInfo = {
+  const handleSubmit = async () => {
+    const moviePayload: IMovieInfo = {
       title: formState.title,
       release_date: formState.release_date || "",
       poster_path: formState.poster_path,
@@ -80,10 +82,22 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
     };
 
     if (isEditModal) {
-      movieData.id = formState.id;
+      moviePayload.id = formState.id;
     }
 
-    onSubmit(movieData);
+    const response = await (isEditModal ? updateMovie : createMovie)(
+      moviePayload,
+    );
+
+    navigate({
+      pathname: `${RoutePaths.Home}`,
+      search: `${searchParams.toString()}`,
+    });
+
+    navigate({
+      pathname: `${RoutePaths.Home}${response.id}`,
+      search: `${searchParams.toString()}`,
+    });
   };
 
   return (
@@ -93,7 +107,12 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
         okText: ButtonTexts.Submit,
         cancelText: ButtonTexts.Reset,
       }}
-      onCancelClick={onCancel}
+      onCancelClick={() =>
+        navigate({
+          pathname: `${RoutePaths.Home}${isEditModal ? editedMovieData.id : null}`,
+          search: searchParams.toString(),
+        })
+      }
       onOkClick={handleSubmit}
     >
       <form

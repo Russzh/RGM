@@ -10,8 +10,7 @@ import { ButtonTexts, Header } from "@shared/components";
 import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
 import { RoutePaths } from "./App.types";
 import { getMovieById } from "./api/fetchData";
-import { AddMovieForm } from "@components/AddMovieForm/AddMovieForm";
-import { EditMovieForm } from "@components/EditMovieForm/EditMovieForm";
+import { AddEditMovieDialog } from "@components/AddEditMovieDialog/AddEditMovieDialog";
 
 const { appContainer } = styles;
 
@@ -33,7 +32,7 @@ const App = () => {
           children: [
             {
               path: RoutePaths.AddMovie,
-              element: <AddMovieForm />,
+              element: <AddEditMovieDialog />,
             },
           ],
         },
@@ -45,7 +44,7 @@ const App = () => {
           children: [
             {
               path: RoutePaths.EditMovie,
-              element: <EditMovieForm />,
+              element: <AddEditMovieDialog isEditModal />,
             },
           ],
         },

@@ -1,13 +1,7 @@
-import {
-  Genre,
-  IMovieInfo,
-} from "@components/MovieList/MovieCard/MovieCard.types";
+import { Genre } from "@components/MovieList/MovieCard/MovieCard.types";
 
 export interface IAddEditMovieDialogProps {
   isEditModal?: boolean;
-  onSubmit: (movie: IMovieInfo) => void;
-  onCancel: () => void;
-  movieData?: IMovieInfo;
 }
 
 export type FormAction =
