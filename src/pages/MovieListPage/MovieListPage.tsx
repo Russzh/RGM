@@ -26,7 +26,7 @@ const MovieListPage: React.FC = () => {
   let currentPage = parseInt(searchParams.get("page") || "1", 10);
   const currentPageSize = parseInt(searchParams.get("pageSize") || "10", 10);
 
-  const { data: responseMovies } = useQuery({
+  const { data: responseMovies, refetch } = useQuery({
     queryKey: [
       "responseMovies",
       searchFormQuery,
@@ -112,7 +112,9 @@ const MovieListPage: React.FC = () => {
           movies found
         </section>
 
-        {movieList && <MovieList movieList={movieList} />}
+        {movieList && (
+          <MovieList movieList={movieList} refetchMovieList={refetch} />
+        )}
 
         {!!responseMovies?.totalAmount && (
           <Pagination

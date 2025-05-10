@@ -40,3 +40,9 @@ export const updateMovie = async (
 
   return response.data;
 };
+
+export const deleteMovie = async (movieId: number): Promise<IMovieInfo> => {
+  const response = await axios.delete(`${baseURL}/movies/${movieId}`);
+
+  return response.data;
+};
