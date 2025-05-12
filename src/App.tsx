@@ -7,9 +7,7 @@ import { MovieListPage } from "./pages";
 import { MovieDetails } from "@components/MovieDetails/MovieDetails";
 import { SearchForm } from "@components/SearchForm/SearchForm";
 import { ButtonTexts, Header } from "@shared/components";
-import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
 import { RoutePaths } from "./App.types";
-import { getMovieById } from "./api/fetchData";
 import { AddEditMovieDialog } from "@components/AddEditMovieDialog/AddEditMovieDialog";
 
 const { appContainer } = styles;
@@ -39,8 +37,6 @@ const App = () => {
         {
           path: ":movieId",
           element: <MovieDetails />,
-          loader: async ({ params }): Promise<IMovieInfo> =>
-            getMovieById(params.movieId as string),
           children: [
             {
               path: RoutePaths.EditMovie,

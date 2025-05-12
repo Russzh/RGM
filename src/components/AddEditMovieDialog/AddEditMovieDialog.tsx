@@ -3,6 +3,7 @@ import { Checkbox, DatePicker, Select } from "antd";
 import dayjs from "dayjs";
 import { useNavigate, useOutletContext, useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 
 import styles from "./AddEditMovieDialog.module.scss";
 import globalStyles from "../../index.module.scss";
@@ -36,6 +37,7 @@ const { errorFormText, formField, invalidClass } = globalStyles;
 const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
   isEditModal = false,
 }) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const editedMovieData = useOutletContext<IMovieInfo>();
@@ -64,6 +66,7 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
   } = useForm<IMovieInfo>({
     defaultValues: initialState,
   });
+
   const onSubmit = async (formState: IMovieInfo) => {
     const moviePayload: IMovieInfo = {
       title: formState.title,
@@ -79,19 +82,21 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
       moviePayload.id = formState.id;
     }
 
-    const response = await (isEditModal ? updateMovie : createMovie)(
+    const newMovieData = await (isEditModal ? updateMovie : createMovie)(
       moviePayload,
     );
 
-    navigate({
-      pathname: `${RoutePaths.Home}`,
-      search: `${searchParams.toString()}`,
+    await queryClient.invalidateQueries({
+      queryKey: ["responseMovies"],
     });
 
-    navigate({
-      pathname: `${RoutePaths.Home}${response.id}`,
-      search: `${searchParams.toString()}`,
-    });
+    navigate(
+      {
+        pathname: `${RoutePaths.Home}${newMovieData.id}`,
+        search: `${searchParams.toString()}`,
+      },
+      { state: { updatedMovie: newMovieData } },
+    );
   };
 
   return (
@@ -191,8 +196,8 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
               registerProps={register("vote_average", {
                 required: "Rating is required",
                 minLength: {
-                  value: 3,
-                  message: "Rating must be at least 3 characters long",
+                  value: 1,
+                  message: "Rating must be at least 1 characters long",
                 },
                 pattern: {
                   value: /^(10(\.0)?|[0-9](\.[0-9])?)$/,
