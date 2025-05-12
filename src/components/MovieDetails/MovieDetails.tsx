@@ -68,7 +68,7 @@ const MovieDetails: React.FC = () => {
         <span>{genres.join(", ")}</span>
         <div className={movieReleaseWrapper}>
           <p>{new Date(release_date).getFullYear()}</p>
-          <p>{formatMinutes(runtime)}</p>
+          <p>{formatMinutes(runtime as number)}</p>
         </div>
         <span>{overview}</span>
       </div>

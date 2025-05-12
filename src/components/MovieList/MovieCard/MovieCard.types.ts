@@ -6,7 +6,7 @@ export interface IMovieInfo {
   id?: number;
   overview: string;
   vote_average: string | number;
-  runtime: number;
+  runtime: string | number;
 }
 
 export interface IMovieCardProps {

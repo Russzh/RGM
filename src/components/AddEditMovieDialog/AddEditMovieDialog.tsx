@@ -1,9 +1,11 @@
-import React, { useReducer, useState } from "react";
+import React, { useState } from "react";
 import { Checkbox, DatePicker, Select } from "antd";
 import dayjs from "dayjs";
 import { useNavigate, useOutletContext, useSearchParams } from "react-router";
+import { Controller, useForm } from "react-hook-form";
 
 import styles from "./AddEditMovieDialog.module.scss";
+import globalStyles from "../../index.module.scss";
 import {
   Input,
   InputLabels,
@@ -17,16 +19,19 @@ import {
   IMovieInfo,
   movieGenres,
 } from "@components/MovieList/MovieCard/MovieCard.types";
-import {
-  FormAction,
-  IAddEditMovieDialogProps,
-} from "./AddEditMovieDialog.types";
+import { IAddEditMovieDialogProps } from "./AddEditMovieDialog.types";
 import { formatMinutes } from "@shared/helpers";
 import { createMovie, updateMovie } from "../../api/fetchData";
 import { RoutePaths } from "../../App.types";
 
-const { formContainer, formRow, fieldContainerWithLabel, datePickerAntd } =
-  styles;
+const {
+  formContainer,
+  formRow,
+  fieldContainerWithLabel,
+  datePickerAntd,
+  runtimeLabel,
+} = styles;
+const { errorFormText, formField, invalidClass } = globalStyles;
 
 const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
   isEditModal = false,
@@ -36,7 +41,7 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
   const editedMovieData = useOutletContext<IMovieInfo>();
 
   const [runtimeDisplayValue, setRuntimeDisplayValue] = useState<string>(
-    isEditModal ? formatMinutes(editedMovieData.runtime) : "",
+    isEditModal ? formatMinutes(editedMovieData.runtime as number) : "",
   );
 
   const initialState: IMovieInfo = {
@@ -50,35 +55,24 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
     runtime: isEditModal ? editedMovieData.runtime : 0,
   };
 
-  const formReducer = (state: IMovieInfo, action: FormAction): IMovieInfo => {
-    switch (action.type) {
-      case "SET_TITLE":
-        return { ...state, title: action.payload };
-      case "SET_RELEASE_DATE":
-        return { ...state, release_date: action.payload };
-      case "SET_IMAGE_URL":
-        return { ...state, poster_path: action.payload };
-      case "SET_RATING":
-        return { ...state, vote_average: action.payload };
-      case "SET_DESCRIPTION":
-        return { ...state, overview: action.payload };
-      case "SET_GENRES":
-        return { ...state, genres: action.payload };
-      case "SET_RUNTIME":
-        return { ...state, runtime: action.payload };
-    }
-  };
-  const [formState, dispatch] = useReducer(formReducer, initialState);
-
-  const handleSubmit = async () => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm<IMovieInfo>({
+    defaultValues: initialState,
+  });
+  const onSubmit = async (formState: IMovieInfo) => {
     const moviePayload: IMovieInfo = {
       title: formState.title,
       release_date: formState.release_date || "",
       poster_path: formState.poster_path,
-      vote_average: formState.vote_average,
+      vote_average: +formState.vote_average,
       overview: formState.overview,
       genres: formState.genres,
-      runtime: formState.runtime,
+      runtime: +formState.runtime,
     };
 
     if (isEditModal) {
@@ -109,77 +103,110 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
       }}
       onCancelClick={() =>
         navigate({
-          pathname: `${RoutePaths.Home}${isEditModal ? editedMovieData.id : null}`,
+          pathname: `${RoutePaths.Home}${isEditModal ? editedMovieData.id : ""}`,
           search: searchParams.toString(),
         })
       }
-      onOkClick={handleSubmit}
+      onOkClick={handleSubmit(onSubmit)}
     >
       <form
         className={formContainer}
         onKeyDown={(e: React.KeyboardEvent<HTMLFormElement>) =>
-          e.key === "Enter" ? handleSubmit() : null
+          e.key === "Enter" ? handleSubmit(onSubmit) : null
         }
       >
         <div className={formRow}>
-          <Input
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              dispatch({ type: "SET_TITLE", payload: e.target.value })
-            }
-            defaultValue={formState.title}
-            inputId="add-movie-form-title"
-            invalid={false}
-            inputPlaceholder={InputPlaceholders.MovieTitle}
-            labelText={InputLabels.Title}
-          />
+          <div className={formField}>
+            <Input
+              inputId="add-movie-form-title"
+              invalid={!!errors.title}
+              inputPlaceholder={InputPlaceholders.MovieTitle}
+              labelText={InputLabels.Title}
+              registerProps={register("title", {
+                required: "Title is required",
+                minLength: {
+                  value: 3,
+                  message: "Title must be at least 3 characters long",
+                },
+              })}
+              errorMessage={errors.title?.message}
+            />
+          </div>
 
           <div className={fieldContainerWithLabel}>
             <label htmlFor="add-movie-form-release-date">
               {InputLabels.ReleaseDate}
             </label>
-            <DatePicker
-              defaultValue={
-                formState.release_date
-                  ? dayjs(formState.release_date, datepickerFormat)
-                  : null
-              }
-              className={datePickerAntd}
-              id="add-movie-form-release-date"
-              format={datepickerFormat}
-              onChange={(date, dateString) => {
-                dispatch({
-                  type: "SET_RELEASE_DATE",
-                  payload: dateString as string,
-                });
+
+            <Controller
+              name="release_date"
+              control={control}
+              rules={{
+                required: "Release date is required",
               }}
-              allowClear
-              placeholder={InputPlaceholders.MovieReleaseDate}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  value={
+                    field.value ? dayjs(field.value, datepickerFormat) : null
+                  }
+                  status={errors.release_date ? "error" : ""}
+                  className={datePickerAntd}
+                  id="add-movie-form-release-date"
+                  format={datepickerFormat}
+                  onChange={(date, dateString) => {
+                    field.onChange(dateString);
+                  }}
+                  allowClear
+                  placeholder={InputPlaceholders.MovieReleaseDate}
+                />
+              )}
             />
+            {errors.release_date && (
+              <p className={errorFormText}>{errors.release_date.message}</p>
+            )}
           </div>
         </div>
 
         <div className={formRow}>
-          <Input
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              dispatch({ type: "SET_IMAGE_URL", payload: e.target.value })
-            }
-            defaultValue={formState.poster_path}
-            inputId="add-movie-form-url"
-            invalid={false}
-            inputPlaceholder={InputPlaceholders.MovieUrl}
-            labelText={InputLabels.MovieUrl}
-          />
+          <div className={formField}>
+            <Input
+              registerProps={register("poster_path", {
+                required: "Movie URL is required",
+                pattern: {
+                  value: /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))$/i,
+                  message: "Invalid URL format",
+                },
+              })}
+              inputId="add-movie-form-url"
+              invalid={!!errors.poster_path}
+              inputPlaceholder={InputPlaceholders.MovieUrl}
+              labelText={InputLabels.MovieUrl}
+              errorMessage={errors.poster_path?.message}
+            />
+          </div>
 
-          <Input
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              dispatch({ type: "SET_RATING", payload: +e.target.value })
-            }
-            defaultValue={formState.vote_average}
-            inputId="add-movie-form-rating"
-            invalid={false}
-            inputPlaceholder={InputPlaceholders.MovieRating}
-            labelText={InputLabels.RATING}
-          />
+          <div className={formField}>
+            <Input
+              registerProps={register("vote_average", {
+                required: "Rating is required",
+                minLength: {
+                  value: 3,
+                  message: "Rating must be at least 3 characters long",
+                },
+                pattern: {
+                  value: /^(10(\.0)?|[0-9](\.[0-9])?)$/,
+                  message:
+                    "Rating must be a number between 0.0 and 10.0 with one decimal place",
+                },
+              })}
+              inputId="add-movie-form-rating"
+              invalid={!!errors.vote_average}
+              inputPlaceholder={InputPlaceholders.MovieRating}
+              labelText={InputLabels.RATING}
+              errorMessage={errors.vote_average?.message}
+            />
+          </div>
         </div>
 
         <div className={formRow}>
@@ -187,68 +214,106 @@ const AddEditMovieDialog: React.FC<IAddEditMovieDialogProps> = ({
             <label htmlFor="add-movie-form-select-genre">
               {InputLabels.SelectGenre}
             </label>
-            <Select
-              mode="multiple"
-              placeholder={InputPlaceholders.MovieGenres}
-              value={formState.genres}
-              onChange={(values) =>
-                dispatch({ type: "SET_GENRES", payload: values })
-              }
-              dropdownRender={() => (
-                <div>
-                  {movieGenres.map((listGenre, index) => (
-                    <div key={index}>
-                      <Checkbox
-                        checked={formState.genres.includes(listGenre)}
-                        onChange={(e) =>
-                          dispatch({
-                            type: "SET_GENRES",
-                            payload: e.target.checked
-                              ? [...formState.genres, listGenre]
-                              : formState.genres.filter(
-                                  (formGenre) => formGenre !== listGenre,
-                                ),
-                          })
-                        }
-                      >
-                        {listGenre}
-                      </Checkbox>
+
+            <Controller
+              name="genres"
+              control={control}
+              rules={{
+                required: "At least one genre must be selected",
+              }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  mode="multiple"
+                  status={errors.genres ? "error" : ""}
+                  placeholder={InputPlaceholders.MovieGenres}
+                  value={field.value}
+                  onChange={(values) => field.onChange(values)}
+                  dropdownRender={() => (
+                    <div>
+                      {movieGenres.map((listGenre, index) => (
+                        <div key={index}>
+                          <Checkbox
+                            checked={field.value.includes(listGenre)}
+                            onChange={(e) =>
+                              field.onChange(
+                                e.target.checked
+                                  ? [...field.value, listGenre]
+                                  : field.value.filter(
+                                      (formGenre) => formGenre !== listGenre,
+                                    ),
+                              )
+                            }
+                          >
+                            {listGenre}
+                          </Checkbox>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  )}
+                />
               )}
             />
+            {errors.genres && (
+              <p className={errorFormText}>{errors.genres.message}</p>
+            )}
           </div>
 
-          <Input
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              dispatch({ type: "SET_RUNTIME", payload: +e.target.value });
-              setRuntimeDisplayValue(e.target.value);
-            }}
-            onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setRuntimeDisplayValue(formatMinutes(+e.target.value));
-            }}
-            currentValue={runtimeDisplayValue}
-            inputId="add-movie-form-runtime"
-            invalid={false}
-            inputPlaceholder={InputPlaceholders.MovieRunTime}
-            labelText={InputLabels.RUNTIME}
-          />
+          <div className={formField}>
+            <label className={runtimeLabel} htmlFor="add-movie-form-runtime">
+              {InputLabels.RUNTIME}
+            </label>
+
+            <input
+              {...register("runtime", {
+                required: "Runtime is required",
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: "Runtime must be a valid number",
+                },
+                validate: (value) =>
+                  value > 0 || "Runtime must be greater than 0",
+              })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setValue("runtime", e.target.value, {
+                  shouldValidate: true,
+                });
+                setRuntimeDisplayValue(e.target.value);
+              }}
+              onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setRuntimeDisplayValue(formatMinutes(+e.target.value));
+              }}
+              value={runtimeDisplayValue}
+              id="add-movie-form-runtime"
+              className={errors.runtime ? invalidClass : ""}
+              placeholder={InputPlaceholders.MovieRunTime}
+            />
+            {errors.runtime && (
+              <p className={errorFormText}>{errors.runtime.message}</p>
+            )}
+          </div>
         </div>
 
-        <div className={`${formRow} ${fieldContainerWithLabel}`}>
+        <div className={`${formRow} ${fieldContainerWithLabel} ${formField}`}>
           <label htmlFor="add-movie-form-description">
             {InputLabels.Overview}
           </label>
           <textarea
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              dispatch({ type: "SET_DESCRIPTION", payload: e.target.value })
-            }
             id="add-movie-form-description"
-            defaultValue={formState.overview}
             placeholder={InputPlaceholders.MovieDescription}
             rows={7}
+            {...register("overview", {
+              required: "Overview is required",
+              minLength: {
+                value: 10,
+                message: "Overview must be at least 10 characters long",
+              },
+            })}
+            className={errors.overview ? invalidClass : ""}
           />
+          {errors.overview && (
+            <p className={errorFormText}>{errors.overview.message}</p>
+          )}
         </div>
       </form>
     </Dialog>
