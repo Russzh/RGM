@@ -36,6 +36,16 @@ textarea {
   border-color: red;
 }
 
+.formField {
+  display: flex;
+  flex-direction: column;
+}
+
+.errorFormText {
+  font-style: italic;
+  color: red;
+}
+
 img {
   width: 200px;
   height: 300px;

@@ -14,7 +14,7 @@ import { moviesList } from "@shared/constants";
 const setupToSeeContextMenuBtns = async (): Promise<void> => {
   render(
     <MemoryRouter>
-      <MovieList movieList={moviesList} />
+      <MovieList movieList={moviesList} refetchMovieList={jest.fn} />
     </MemoryRouter>,
   );
 
@@ -26,7 +26,7 @@ describe("MovieList", () => {
   it("should render movieListWrapper with correct number of MovieCard", () => {
     render(
       <MemoryRouter>
-        <MovieList movieList={moviesList} />
+        <MovieList movieList={moviesList} refetchMovieList={jest.fn} />
       </MemoryRouter>,
     );
 
@@ -39,7 +39,7 @@ describe("MovieList", () => {
   it("should not show any dialogs initially", () => {
     render(
       <MemoryRouter>
-        <MovieList movieList={moviesList} />
+        <MovieList movieList={moviesList} refetchMovieList={jest.fn} />
       </MemoryRouter>,
     );
 

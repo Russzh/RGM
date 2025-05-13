@@ -1,5 +1,9 @@
 export const formatMinutes = (totalMinutes: number): string => {
-  if (isNaN(totalMinutes) || !totalMinutes || totalMinutes < 0) {
+  if (totalMinutes === 0 || totalMinutes < 0) {
+    return "0";
+  }
+
+  if (isNaN(totalMinutes)) {
     return "";
   }
 

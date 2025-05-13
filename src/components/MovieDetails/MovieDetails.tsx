@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { useLoaderData, useNavigate, useSearchParams } from "react-router";
+import {
+  Outlet,
+  useParams,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router";
 
 import styles from "./MovieDetails.module.scss";
 import { formatMinutes } from "@shared/helpers";
 import { IMovieInfo } from "@components/MovieList/MovieCard/MovieCard.types";
 import { RoutePaths } from "../../App.types";
 import { commonImgUrl } from "@shared/constants";
+import { getMovieById } from "../../api/fetchData";
 
 const {
   movieDetailsWrapper,
@@ -18,18 +25,35 @@ const {
 } = styles;
 
 const MovieDetails: React.FC = () => {
-  const [isImgUrlHasError, setIsImgUrlHasError] = useState(false);
+  const [isImgUrlHasError, setIsImgUrlHasError] = useState<boolean>(false);
+  const [isShouldRenderOutlet, setIsShouldRenderOutlet] =
+    useState<boolean>(false);
+  const [selectedMovie, setSelectedMovie] = useState<IMovieInfo>(
+    {} as IMovieInfo,
+  );
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const {
-    poster_path,
-    title,
-    genres,
-    vote_average,
-    runtime,
-    overview,
-    release_date,
-  } = useLoaderData() as IMovieInfo;
+  const { movieId } = useParams<{ movieId: string }>();
+  const location = useLocation();
+
+  useEffect(() => {
+    setIsImgUrlHasError(false);
+  }, [selectedMovie]);
+
+  useEffect(() => {
+    setIsShouldRenderOutlet(false);
+    getMovieById(movieId as string).then((selectedMovieData) => {
+      setSelectedMovie(selectedMovieData);
+      setTimeout(() => setIsShouldRenderOutlet(true));
+    });
+  }, [movieId]);
+
+  useEffect(() => {
+    if (location.state?.updatedMovie) {
+      setSelectedMovie(location.state.updatedMovie);
+    }
+  }, [location.state]);
 
   return (
     <div className={movieDetailsWrapper} data-testid="movie-details-wrapper">
@@ -43,22 +67,28 @@ const MovieDetails: React.FC = () => {
         }
       />
       <img
-        src={isImgUrlHasError || !poster_path ? commonImgUrl : poster_path}
-        alt={title}
+        src={
+          isImgUrlHasError || !selectedMovie?.poster_path
+            ? commonImgUrl
+            : selectedMovie?.poster_path
+        }
+        alt={selectedMovie?.title}
         onError={() => setIsImgUrlHasError(true)}
       />
       <div className={movieDescriptionWrapper}>
         <div className={movieNameWrapper}>
-          <h3>{title.toUpperCase()}</h3>
-          <div className={movieRating}>{vote_average}</div>
+          <h3>{selectedMovie?.title?.toUpperCase()}</h3>
+          <div className={movieRating}>{selectedMovie?.vote_average}</div>
         </div>
-        <span>{genres.join(", ")}</span>
+        <span>{selectedMovie?.genres?.join(", ")}</span>
         <div className={movieReleaseWrapper}>
-          <p>{new Date(release_date).getFullYear()}</p>
-          <p>{formatMinutes(runtime)}</p>
+          <p>{new Date(selectedMovie?.release_date).getFullYear()}</p>
+          <p>{formatMinutes(selectedMovie?.runtime as number)}</p>
         </div>
-        <span>{overview}</span>
+        <span>{selectedMovie?.overview}</span>
       </div>
+
+      {isShouldRenderOutlet && <Outlet context={selectedMovie} />}
     </div>
   );
 };

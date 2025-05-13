@@ -7,7 +7,7 @@ describe("#formatMinutes", () => {
     });
 
     it("0 input", () => {
-      expect(formatMinutes(0)).toBe("");
+      expect(formatMinutes(0)).toBe("0");
     });
 
     it("negative numbers", () => {

@@ -1,3 +1,5 @@
+import { UseFormRegisterReturn } from "react-hook-form";
+
 export interface IInputProps {
   inputId: string;
   type?: string;
@@ -8,6 +10,8 @@ export interface IInputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   labelText?: string;
+  registerProps?: UseFormRegisterReturn<string>;
+  errorMessage?: string;
 }
 
 export enum InputPlaceholders {

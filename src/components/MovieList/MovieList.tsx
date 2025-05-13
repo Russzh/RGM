@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate, useSearchParams, useLocation } from "react-router";
 
 import styles from "./MovieList.module.scss";
 import {
@@ -9,19 +10,37 @@ import {
 } from "@shared/components";
 import { MovieCard } from "./MovieCard/MovieCard";
 import { IMovieInfo } from "./MovieCard/MovieCard.types";
-import { AddEditMovieDialog } from "@components/AddEditMovieDialog/AddEditMovieDialog";
 import { IMovieListProps } from "@components/MovieList/MovieList.types";
+import { RoutePaths } from "../../App.types";
+import { deleteMovie } from "../../api/fetchData";
 
 const { movieListWrapper } = styles;
 
-const MovieList: React.FC<IMovieListProps> = ({ movieList }) => {
+const MovieList: React.FC<IMovieListProps> = ({
+  movieList,
+  refetchMovieList,
+}) => {
   const [isConfirmDialogOpened, setIsConfirmDialogOpened] = useState(false);
-  const [isEditDialogOpened, setIsEditDialogOpened] = useState(false);
-  const [editedMovie, setEditedMovie] = useState<IMovieInfo | null>(null);
+  const [deleteMovieId, setDeleteMovieId] = useState<number | null>(null);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const handleEditClick = (editedMovieData: IMovieInfo): void => {
-    setIsEditDialogOpened(true);
-    setEditedMovie(editedMovieData);
+    navigate({
+      pathname: `${RoutePaths.Home}${editedMovieData.id}/${RoutePaths.EditMovie}`,
+      search: searchParams.toString(),
+    });
+  };
+
+  const handleDeleteMovie = async () => {
+    await deleteMovie(deleteMovieId as number);
+
+    setIsConfirmDialogOpened(false);
+    if (location.pathname !== RoutePaths.Home) {
+      navigate({ pathname: RoutePaths.Home, search: searchParams.toString() });
+    }
+    refetchMovieList();
   };
 
   return (
@@ -31,22 +50,16 @@ const MovieList: React.FC<IMovieListProps> = ({ movieList }) => {
           <MovieCard
             key={movie.id}
             movie={movie}
-            onDeleteClick={() => setIsConfirmDialogOpened(true)}
+            onDeleteClick={() => {
+              setIsConfirmDialogOpened(true);
+              setDeleteMovieId(movie.id as number);
+            }}
             onEditClick={(editedMovieData) => {
               handleEditClick(editedMovieData);
             }}
           />
         ))}
       </div>
-
-      {isEditDialogOpened && (
-        <AddEditMovieDialog
-          isEditModal
-          movieData={editedMovie as IMovieInfo}
-          onSubmit={(moviePayload) => console.log(moviePayload)}
-          onCancel={() => setIsEditDialogOpened(false)}
-        />
-      )}
 
       {isConfirmDialogOpened && (
         <Dialog
@@ -55,7 +68,7 @@ const MovieList: React.FC<IMovieListProps> = ({ movieList }) => {
           buttonsText={{
             okText: ButtonTexts.Confirm,
           }}
-          onOkClick={() => setIsConfirmDialogOpened(false)}
+          onOkClick={() => handleDeleteMovie()}
           onCancelClick={() => setIsConfirmDialogOpened(false)}
         >
           {DialogConfirmTexts.Delete}

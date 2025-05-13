@@ -10,22 +10,12 @@ import {
 } from "@shared/components";
 import { moviesList } from "@shared/constants";
 import { formatMinutes } from "@shared/helpers";
-import {
-  IMovieInfo,
-  movieGenres,
-} from "@components/MovieList/MovieCard/MovieCard.types";
+import { movieGenres } from "@components/MovieList/MovieCard/MovieCard.types";
 
 const mockOnCancel = jest.fn();
 const mockOnSubmit = jest.fn();
 const addEditModalSetup = (isEditModal = false): void => {
-  render(
-    <AddEditMovieDialog
-      onCancel={mockOnCancel}
-      onSubmit={mockOnSubmit}
-      isEditModal={isEditModal}
-      movieData={isEditModal ? moviesList[0] : ({} as IMovieInfo)}
-    />,
-  );
+  render(<AddEditMovieDialog isEditModal={isEditModal} />);
 };
 
 describe("AddEditMovieDialog", () => {

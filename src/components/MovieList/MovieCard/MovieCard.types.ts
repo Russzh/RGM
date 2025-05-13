@@ -3,10 +3,10 @@ export interface IMovieInfo {
   title: string;
   release_date: string;
   genres: Genre[];
-  id: number;
+  id?: number;
   overview: string;
   vote_average: string | number;
-  runtime: number;
+  runtime: string | number;
 }
 
 export interface IMovieCardProps {

@@ -4,7 +4,7 @@ import globalStyles from "../../../index.module.scss";
 import styles from "./Input.module.scss";
 import { IInputProps, InputPlaceholders } from "./Input.types";
 
-const { invalidClass } = globalStyles;
+const { invalidClass, errorFormText } = globalStyles;
 const { inputContainer } = styles;
 
 const Input: React.FC<IInputProps> = ({
@@ -17,6 +17,8 @@ const Input: React.FC<IInputProps> = ({
   onChange,
   onBlur,
   labelText,
+  registerProps,
+  errorMessage,
 }) => {
   const renderWrapper = (children: React.ReactNode) =>
     labelText ? (
@@ -38,7 +40,10 @@ const Input: React.FC<IInputProps> = ({
         type={type ?? "text"}
         placeholder={inputPlaceholder ?? InputPlaceholders.Default}
         onChange={onChange}
+        {...registerProps}
       />
+
+      {invalid && <p className={errorFormText}>{errorMessage}</p>}
     </>,
   );
 };
