@@ -1,13 +1,14 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter, useLoaderData } from "react-router";
+import { render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 
 import { MovieDetails } from "./MovieDetails";
-import { moviesList } from "@shared/constants";
 import {
   Genre,
   IMovieInfo,
 } from "@components/MovieList/MovieCard/MovieCard.types";
+import { getMovieById } from "../../api/fetchData";
+import { commonImgUrl } from "@shared/constants";
 
 const mockMovie: IMovieInfo = {
   poster_path: "/movie-images/pulp-fiction.png",
@@ -20,31 +21,52 @@ const mockMovie: IMovieInfo = {
   vote_average: 8.9,
   runtime: 135,
 };
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
-  useLoaderData: jest.fn(),
+jest.mock("../../api/fetchData", () => ({
+  getMovieById: jest.fn(),
 }));
 
 describe("MovieDetails", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    (useLoaderData as jest.Mock).mockImplementation(() => mockMovie);
+    (getMovieById as jest.Mock).mockResolvedValue(mockMovie);
   });
 
-  it("should be rendered correctly when a movie is selected", () => {
+  it("should be rendered correctly when a movie is selected", async () => {
     render(
       <MemoryRouter>
         <MovieDetails />
       </MemoryRouter>,
     );
 
-    const movieImage = screen.getByAltText(moviesList[0].title);
+    const movieImage = await waitFor(() =>
+      screen.getByAltText(mockMovie.title),
+    );
     expect(movieImage).toBeInTheDocument();
-    expect(movieImage).toHaveAttribute("src", moviesList[0].poster_path);
+    expect(movieImage).toHaveAttribute("src", mockMovie.poster_path);
 
     const movieName = screen.getByRole("heading", { level: 3 });
     expect(movieName).toBeInTheDocument();
-    expect(movieName).toHaveTextContent(moviesList[0].title.toUpperCase());
+    expect(movieName).toHaveTextContent(mockMovie.title.toUpperCase());
+  });
+
+  it("should render fallback image if poster_path is missing or invalid", async () => {
+    (getMovieById as jest.Mock).mockResolvedValue({
+      ...mockMovie,
+      poster_path: null,
+    });
+
+    render(
+      <MemoryRouter>
+        <MovieDetails />
+      </MemoryRouter>,
+    );
+
+    const fallbackImage = await waitFor(() =>
+      screen.getByAltText(mockMovie.title),
+    );
+
+    expect(fallbackImage).toBeInTheDocument();
+    expect(fallbackImage).toHaveAttribute("src", commonImgUrl);
   });
 });

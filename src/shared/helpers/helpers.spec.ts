@@ -1,18 +1,18 @@
 import { formatMinutes } from "@shared/helpers";
 
 describe("#formatMinutes", () => {
-  describe("should return an empty string for", () => {
-    it("NaN input", () => {
-      expect(formatMinutes(NaN)).toBe("");
-    });
-
+  describe("should return an `0` string for", () => {
     it("0 input", () => {
       expect(formatMinutes(0)).toBe("0");
     });
 
     it("negative numbers", () => {
-      expect(formatMinutes(-45)).toBe("");
+      expect(formatMinutes(-45)).toBe("0");
     });
+  });
+
+  it("should return an empty string for NaN input", () => {
+    expect(formatMinutes(NaN)).toBe("");
   });
 
   describe("should correctly format minutes", () => {

@@ -1,11 +1,16 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 
 import { Header } from "./Header";
 
 describe("Header Component", () => {
   it("should render the header container", () => {
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>,
+    );
 
     const headerElement = screen.getByRole("banner");
     expect(headerElement).toBeInTheDocument();
@@ -15,9 +20,11 @@ describe("Header Component", () => {
 
   it("should render children inside the header content", () => {
     render(
-      <Header>
-        <p>Test Content</p>
-      </Header>,
+      <MemoryRouter>
+        <Header>
+          <p>Test Content</p>
+        </Header>
+      </MemoryRouter>,
     );
 
     const headerContentElement = screen.getByText("Test Content");
@@ -26,7 +33,11 @@ describe("Header Component", () => {
   });
 
   it("should render empty header when no children are provided", () => {
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>,
+    );
 
     const headerContentElement = screen.getByTestId("header-content");
 

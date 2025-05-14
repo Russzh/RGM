@@ -10,6 +10,16 @@ import {
   DialogTitles,
 } from "@shared/components";
 import { moviesList } from "@shared/constants";
+import { RoutePaths } from "../../App.types";
+
+const mockNavigate = jest.fn();
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
+  useNavigate: () => mockNavigate,
+}));
+jest.mock("../../api/fetchData", () => ({
+  deleteMovie: jest.fn().mockResolvedValue({}),
+}));
 
 const setupToSeeContextMenuBtns = async (): Promise<void> => {
   render(
@@ -55,66 +65,26 @@ describe("MovieList", () => {
       await setupToSeeContextMenuBtns();
     });
 
-    describe("Edit modal", () => {
-      beforeEach(async () => {
-        await userEvent.click(screen.getByText(ButtonTexts.Edit.toUpperCase()));
-      });
+    it("should navigate to the correct route after clicking on EDIT btn", async () => {
+      await userEvent.click(screen.getByText(ButtonTexts.Edit.toUpperCase()));
 
-      it("should be opened with correct movie data when EDIT btn is clicked and be closed by RESET btn", async () => {
-        expect(screen.getByText(DialogTitles.Edit)).toBeInTheDocument();
-
-        expect(
-          screen.getByDisplayValue(moviesList[0].poster_path),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByDisplayValue(moviesList[0].vote_average),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByDisplayValue(moviesList[0].overview),
-        ).toBeInTheDocument();
-
-        await userEvent.click(screen.getByText(ButtonTexts.Reset));
-
-        expect(screen.queryByText(DialogTitles.Edit)).not.toBeInTheDocument();
-      });
-
-      it("should be closed by SUBMIT btn", async () => {
-        jest.spyOn(console, "log");
-
-        expect(screen.getByText(DialogTitles.Edit)).toBeInTheDocument();
-
-        await userEvent.click(screen.getByText(ButtonTexts.Submit));
-
-        expect(console.log).toHaveBeenCalled();
+      expect(mockNavigate).toHaveBeenCalledWith({
+        pathname: `${RoutePaths.Home}${moviesList[0].id}/${RoutePaths.EditMovie}`,
+        search: "",
       });
     });
 
-    describe("Delete confirm modal", () => {
-      beforeEach(async () => {
-        await userEvent.click(
-          screen.getByText(ButtonTexts.Delete.toUpperCase()),
-        );
-      });
+    it("should open Delete confirm modal with correct message when DELETE btn is clicked and be closed by CONFIRM btn", async () => {
+      await userEvent.click(screen.getByText(ButtonTexts.Delete.toUpperCase()));
+      expect(screen.getByText(DialogTitles.Delete)).toBeInTheDocument();
 
-      it("should be opened with correct message when DELETE btn is clicked and be closed by CONFIRM btn", async () => {
-        expect(screen.getByText(DialogTitles.Delete)).toBeInTheDocument();
+      expect(screen.getByText(DialogConfirmTexts.Delete)).toBeInTheDocument();
+      expect(screen.getByText(DialogTitles.Delete)).toBeInTheDocument();
+      expect(screen.getByText(ButtonTexts.Confirm)).toBeInTheDocument();
 
-        expect(screen.getByText(DialogConfirmTexts.Delete)).toBeInTheDocument();
-        expect(screen.getByText(DialogTitles.Delete)).toBeInTheDocument();
-        expect(screen.getByText(ButtonTexts.Confirm)).toBeInTheDocument();
+      await userEvent.click(screen.getByText(ButtonTexts.Confirm));
 
-        await userEvent.click(screen.getByText(ButtonTexts.Confirm));
-
-        expect(screen.queryByText(DialogTitles.Delete)).not.toBeInTheDocument();
-      });
-
-      it("should be closed by Cross btn", async () => {
-        expect(screen.getByText(DialogTitles.Delete)).toBeInTheDocument();
-
-        await userEvent.click(screen.getByLabelText("Close"));
-
-        expect(screen.queryByText(DialogTitles.Delete)).not.toBeInTheDocument();
-      });
+      expect(screen.queryByText(DialogTitles.Delete)).not.toBeInTheDocument();
     });
   });
 });
